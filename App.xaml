@@ -1,0 +1,18 @@
+﻿<Application x:Class="VerSehen.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:VerSehen"
+             xmlns:viewModel="clr-namespace:VerSehen.MVVM.ViewModel"
+             xmlns:view="clr-namespace:VerSehen.MVVM.View">
+    <Application.Resources>
+
+        <DataTemplate DataType="{x:Type TypeName=viewModel:HomeViewModel}">
+            <view:HomeView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type TypeName=viewModel:SettingsViewModel}">
+            <view:SettingsView/>
+        </DataTemplate>
+        
+    </Application.Resources>
+</Application>
