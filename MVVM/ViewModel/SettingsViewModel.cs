@@ -132,9 +132,6 @@ namespace VerSehen.MVVM.ViewModel
             thread.Start();
             thread.Join();
         }
-
-
-
     }
 }
 
