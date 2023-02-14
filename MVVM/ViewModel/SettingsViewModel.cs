@@ -114,7 +114,7 @@ namespace VerSehen.MVVM.ViewModel
 
                     var isWindowLoadedAndVisible = new Func<bool>(() =>
                     {
-                        return gameWindow.IsLoaded && gameWindow.IsVisible;
+                        return gameWindow.Dispatcher.Invoke(() => gameWindow.IsLoaded && gameWindow.IsVisible);
                     });
 
                     while (!isWindowLoadedAndVisible())
