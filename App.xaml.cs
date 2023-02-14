@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using VerSehen.Core;
@@ -37,6 +38,7 @@ namespace VerSehen
             _serviceProvider = services.BuildServiceProvider();
         }
 
+        [STAThread]
         protected override void OnStartup(StartupEventArgs e)
         {
            var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();

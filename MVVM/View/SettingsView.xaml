@@ -17,7 +17,7 @@
                        FontSize="25"/>
             <Button Content="Home"
                     Height="25"
-                    Command="{Binding Path=DataContext.NavigateToHomeCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                    Command="{Binding Path=DataContext.NavigateToHomeAndStartGameCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
             
         </StackPanel>
     </Grid>

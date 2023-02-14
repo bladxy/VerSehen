@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using VerSehen.Core;
+using VerSehen.MVVM.View;
 using VerSehen.MVVM.ViewModel;
 
 namespace VerSehen.Services
@@ -12,6 +14,7 @@ namespace VerSehen.Services
     {
         ViewModel CurrentView { get; }
         void NavigateTo<T>() where T : ViewModel;
+        
     }
 
     public class NavigationService : ObservableObjects, INavigationService
