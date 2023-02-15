@@ -26,11 +26,6 @@ namespace VerSehen.MVVM.View
         public HomeView()
         {
             InitializeComponent();
-            var parent = VisualTreeHelper.GetParent(wfHost);
-            if (wfHost.Parent is WindowsFormsHost parentHost)
-            {
-                parentHost.Child = null;
-            }
         }
        
 

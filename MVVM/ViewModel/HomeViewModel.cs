@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using VerSehen.Core;
 using VerSehen.Services;
 using System.Diagnostics;
+using System.Windows.Forms.Integration;
 
 namespace VerSehen.MVVM.ViewModel
 {
@@ -20,16 +21,20 @@ namespace VerSehen.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        private WindowsFormsHost wfHost;
+        public WindowsFormsHost WfHost { get { return wfHost; } }
         //Navigation.NavigateTo<SettingsViewModel>();
         public RelayCommand NavigateToSettingsCommand { get; set; }
         public HomeViewModel(INavigationService navigation)
         {
+            wfHost = new WindowsFormsHost();
+            //_wfHost.Child = new MyWinFormsControl(); // ersetzen Sie "MyWinFormsControl" durch Ihre eigene WinForms-Steuerung
+        
             Navigation = navigation;
             NavigateToSettingsCommand = new RelayCommand(o => {
                 Navigation.NavigateTo<SettingsViewModel>();
 
             }, o => true);
-
 
         }
     }

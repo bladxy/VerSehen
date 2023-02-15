@@ -35,6 +35,8 @@ namespace VerSehen
 
             services.AddSingleton<Func<Type, ViewModel>>(ServiceProvider => viewModelType => (ViewModel)ServiceProvider.GetRequiredService(viewModelType));
 
+            // Register HomeViewModel as a singleton service
+            services.AddSingleton<HomeViewModel>();
             _serviceProvider = services.BuildServiceProvider();
         }
 

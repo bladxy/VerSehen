@@ -16,7 +16,7 @@
                     HorizontalAlignment="Center"
                     Margin="10">
            
-            <WindowsFormsHost Name="wfHost"
+            <WindowsFormsHost Name="WfHost"
                               Height="400"
                               Width="600"
                               Margin="10"/>
