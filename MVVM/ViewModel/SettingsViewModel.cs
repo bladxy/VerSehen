@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using VerSehen.Core;
-using VerSehen.MVVM.View;
 using VerSehen.Services;
 using Application = System.Windows.Application;
 using System.Windows.Interop;
-using System.Xml.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Forms.Integration;
-using System.Windows.Threading;
-using System.Windows;
 
 namespace VerSehen.MVVM.ViewModel
 {
@@ -54,7 +49,7 @@ namespace VerSehen.MVVM.ViewModel
             _homeViewModel = homeViewModel;
             NavigateToHomeAndStartGameCommand = new RelayCommand(o => {
                 navigation.NavigateTo<HomeViewModel>();
-                
+
                 Task.Run(() => ProcessStart(_homeViewModel));
             }, o => true);
         }
@@ -78,55 +73,67 @@ namespace VerSehen.MVVM.ViewModel
 
             var thread = new Thread(() =>
             {
-                // Erstelle das WPF-Host-Element und das Windows-Formular
-
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    // Erstelle das WPF-Host-Element und das Windows-Formular
-                    var host = new System.Windows.Forms.Integration.ElementHost();
-                    var wfHost = _homeViewModel.WfHost;
-                    var parent = VisualTreeHelper.GetParent(wfHost);
-                    if (parent != null)
-                    {
-                        if (parent is WindowsFormsHost host1)
-                        {
-                            host1.Child = null;
-                        }
-                        else if (parent is Panel parentPanel)
-                        {
-                            parentPanel.Children.Remove(wfHost);
-                        }
-                    }
+                    var host = CreateWpfHost(_homeViewModel.WfHost);
 
-                    host.Child = wfHost;
+                    RemoveWindowsFormsHostFromHomeView(_homeViewModel.WfHost);
 
-                    host.AutoSize = true;
+                    AddWpfHostToHomeView(_homeViewModel.WfHost, host);
 
-
-                    // Entferne das WindowsFormsHost-Element aus der HomeView
-                    var wfHostInHomeView = _homeViewModel.WfHost;
-                    if (wfHostInHomeView.Parent is WindowsFormsHost parentHost)
-                    {
-                        parentHost.Child = null;
-                    }
-
-                    // Übergabe des Delegaten an den Dispatcher
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         SetParent(handle, new WindowInteropHelper(Application.Current.MainWindow).Handle);
                         SetWindowLong(handle, GWL_STYLE, WS_VISIBLE);
                         SetForegroundWindow(handle);
-                       
                     });
 
-                    // Starte die WPF-Anwendung
-                    System.Windows.Threading.Dispatcher.Run();
+                    StartWpfApplication();
                 });
             });
 
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
+        }
+
+        private static System.Windows.Forms.Integration.ElementHost CreateWpfHost(WindowsFormsHost wfHost)
+        {
+            var host = new System.Windows.Forms.Integration.ElementHost();
+            host.Child = wfHost;
+            host.AutoSize = true;
+
+            return host;
+        }
+
+        private static void RemoveWindowsFormsHostFromHomeView(WindowsFormsHost wfHost)
+        {
+            var parent = VisualTreeHelper.GetParent(wfHost);
+            if (parent != null)
+            {
+                if (parent is WindowsFormsHost host1)
+                {
+                    host1.Child = null;
+                }
+                else if (parent is Panel parentPanel)
+                {
+                    parentPanel.Children.Remove(wfHost);
+                }
+            }
+        }
+
+        private static void AddWpfHostToHomeView(WindowsFormsHost wfHost, System.Windows.Forms.Integration.ElementHost host)
+        {
+            var parentElement = VisualTreeHelper.GetParent(wfHost);
+            if (parentElement is Panel panel)
+            {
+                panel.Children.Add(wfHost);
+            }
+        }
+
+        private static void StartWpfApplication()
+        {
+            System.Windows.Threading.Dispatcher.Run();
         }
     }
 }
