@@ -10,6 +10,8 @@ using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Forms.Integration;
+using System.Runtime.InteropServices;
+using System.Windows.Forms.Integration;
 
 namespace VerSehen.MVVM.ViewModel
 {
@@ -38,7 +40,8 @@ namespace VerSehen.MVVM.ViewModel
 
         [DllImport("user32.dll")]
         static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr GetParent(IntPtr hWnd);
 
         const int GWL_STYLE = -16;
         const int WS_VISIBLE = 0x10000000;
@@ -63,11 +66,19 @@ namespace VerSehen.MVVM.ViewModel
             process.StartInfo.RedirectStandardOutput = true;
             process.Start();
 
-            var handle = IntPtr.Zero;
+            IntPtr handle = IntPtr.Zero;
             while (handle == IntPtr.Zero)
             {
                 process.Refresh();
-                handle = process.MainWindowHandle;
+                if (process.HasExited)
+                {
+                    // handle process exit here
+                    break;
+                }
+                if (process.MainWindowHandle != IntPtr.Zero)
+                {
+                    handle = process.MainWindowHandle;
+                }
                 Thread.Sleep(100);
             }
 
@@ -75,17 +86,19 @@ namespace VerSehen.MVVM.ViewModel
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var host = CreateWpfHost(_homeViewModel.WfHost);
-
-                    RemoveWindowsFormsHostFromHomeView(_homeViewModel.WfHost);
-
-                    AddWpfHostToHomeView(_homeViewModel.WfHost, host);
+                    var width = 800; // replace with your desired width
+                    var height = 600; // replace with your desired height
+                    
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        SetParent(handle, new WindowInteropHelper(Application.Current.MainWindow).Handle);
+                        System.Windows.Forms.Panel p = new System.Windows.Forms.Panel();
+                        SetParent(handle, p.Handle);
+                        _homeViewModel.WfHost.Child = p;
                         SetWindowLong(handle, GWL_STYLE, WS_VISIBLE);
+                        MoveWindow(handle,0, 0, width, height,true);
                         SetForegroundWindow(handle);
+                        
                     });
 
                     StartWpfApplication();
@@ -97,44 +110,14 @@ namespace VerSehen.MVVM.ViewModel
             thread.Join();
         }
 
-        private static System.Windows.Forms.Integration.ElementHost CreateWpfHost(WindowsFormsHost wfHost)
-        {
-            var host = new System.Windows.Forms.Integration.ElementHost();
-            host.Child = wfHost;
-            host.AutoSize = true;
-
-            return host;
-        }
-
-        private static void RemoveWindowsFormsHostFromHomeView(WindowsFormsHost wfHost)
-        {
-            var parent = VisualTreeHelper.GetParent(wfHost);
-            if (parent != null)
-            {
-                if (parent is WindowsFormsHost host1)
-                {
-                    host1.Child = null;
-                }
-                else if (parent is Panel parentPanel)
-                {
-                    parentPanel.Children.Remove(wfHost);
-                }
-            }
-        }
-
-        private static void AddWpfHostToHomeView(WindowsFormsHost wfHost, System.Windows.Forms.Integration.ElementHost host)
-        {
-            var parentElement = VisualTreeHelper.GetParent(wfHost);
-            if (parentElement is Panel panel)
-            {
-                panel.Children.Add(wfHost);
-            }
-        }
-
         private static void StartWpfApplication()
         {
             System.Windows.Threading.Dispatcher.Run();
         }
+     
+        
     }
 }
+    
+
 

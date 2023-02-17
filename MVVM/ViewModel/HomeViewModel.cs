@@ -21,15 +21,23 @@ namespace VerSehen.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-        private WindowsFormsHost wfHost;
-        public WindowsFormsHost WfHost { get { return wfHost; } }
+        private WindowsFormsHost wfHost = new WindowsFormsHost();
+        public WindowsFormsHost WfHost
+        {
+            get 
+            { 
+                return wfHost;
+            }
+            set 
+            { 
+                wfHost = value;
+                OnPropertyChanged();
+            } 
+        }
         //Navigation.NavigateTo<SettingsViewModel>();
         public RelayCommand NavigateToSettingsCommand { get; set; }
         public HomeViewModel(INavigationService navigation)
-        {
-            wfHost = new WindowsFormsHost();
-            //_wfHost.Child = new MyWinFormsControl(); // ersetzen Sie "MyWinFormsControl" durch Ihre eigene WinForms-Steuerung
-        
+        {        
             Navigation = navigation;
             NavigateToSettingsCommand = new RelayCommand(o => {
                 Navigation.NavigateTo<SettingsViewModel>();

@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Forms;
 using System.Windows.Shapes;
 using System.Windows.Forms.Integration;
+using VerSehen.MVVM.ViewModel;
 
 namespace VerSehen.MVVM.View
 {
