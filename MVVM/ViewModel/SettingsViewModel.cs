@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 using VerSehen.Core;
 using VerSehen.Services;
 using Application = System.Windows.Application;
-using System.Windows.Interop;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Forms.Integration;
-using System.Runtime.InteropServices;
-using System.Windows.Forms.Integration;
 
 namespace VerSehen.MVVM.ViewModel
 {
