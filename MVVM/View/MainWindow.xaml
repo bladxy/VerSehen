@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
+        xmlns:winforms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:local="clr-namespace:VerSehen" 
         mc:Ignorable="d"
         Title="MainWindow" Height="625" Width="900">
@@ -21,10 +21,15 @@
             <Button Content="Settings"
                     Height="25"
                     Command="{Binding Path=DataContext.NavigateToSettingsCommand, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Content="Ki Start"
+                    Height="25"
+                    Command="{Binding Path=DataContext.StartKi, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
         </StackPanel>
 
-        <ContentControl Grid.Column="1" 
+        <ContentControl Focusable="True"
+                        Grid.Column="1" 
+                        Name="ContentControl"
                         Content="{Binding Path=DataContext.Navigation.CurrentView, RelativeSource={RelativeSource AncestorType=Window}}"/>
 
     </Grid>

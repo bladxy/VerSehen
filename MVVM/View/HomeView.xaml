@@ -18,7 +18,8 @@
 
             <ContentControl Content="{Binding WfHost, NotifyOnSourceUpdated=True}"
                             Width="800"
-                            Height="600"/>
+                            Height="600"
+                            Focusable="True"/>
         </StackPanel>
     </Grid>
 </UserControl>
