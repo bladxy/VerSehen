@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Drawing.Imaging;
 
 namespace VerSehen.Core
 {
@@ -14,6 +16,32 @@ namespace VerSehen.Core
         public const int VK_LEFT = 0x25; // Left arrow key code
         public const int VK_UP = 0x26; // Up arrow key code
         public const int VK_DOWN = 0x28; // Down arrow key code
+
+        public class RECT
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
+
+        public Bitmap CaptureWindow(IntPtr hWnd)
+        {
+            RECT rect = new RECT();
+            GetWindowRect(hWnd, ref rect);
+
+            int width = rect.Right - rect.Left;
+            int height = rect.Bottom - rect.Top;
+
+            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.CopyFromScreen(rect.Left, rect.Top, 0, 0, bitmap.Size, CopyPixelOperation.SourceCopy);
+
+            return bitmap;
+        }
 
         public void PressKey(int keyCode)
         {
@@ -42,5 +70,6 @@ namespace VerSehen.Core
         {
             PressKey(VK_DOWN);
         }
+
     }
 }
