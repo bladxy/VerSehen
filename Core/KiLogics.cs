@@ -71,5 +71,33 @@ namespace VerSehen.Core
             PressKey(VK_DOWN);
         }
 
+        public void AnalyzeGame(Bitmap bitmap)
+        {
+            Color bodyColor = ColorTranslator.FromHtml("#80FF80");
+            Color appleColor = ColorTranslator.FromHtml("#FF6666");
+            Color eyeColor1 = ColorTranslator.FromHtml("#F2F2F2");
+            Color eyeColor2 = ColorTranslator.FromHtml("#1A1A1A");
+
+            for (int y = 0; y < bitmap.Height; y++)
+            {
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    Color pixelColor = bitmap.GetPixel(x, y);
+
+                    if (pixelColor == bodyColor)
+                    {
+                        // This pixel is part of the snake's body
+                    }
+                    else if (pixelColor == appleColor)
+                    {
+                        // This pixel is part of the apple
+                    }
+                    else if (pixelColor == eyeColor1 || pixelColor == eyeColor2)
+                    {
+                        // This pixel is part of the snake's eyes
+                    }
+                }
+            }
+        }
     }
 }
