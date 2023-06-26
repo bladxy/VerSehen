@@ -99,5 +99,26 @@ namespace VerSehen.Core
                 }
             }
         }
+
+        public void ChooseAction(int snakeHeadX, int snakeHeadY, int appleX, int appleY)
+        {
+            if (snakeHeadX < appleX)
+            {
+                MoveRight();
+            }
+            else if (snakeHeadX > appleX)
+            {
+                MoveLeft();
+            }
+            else if (snakeHeadY < appleY)
+            {
+                MoveDown();
+            }
+            else if (snakeHeadY > appleY)
+            {
+                MoveUp();
+            }
+        }
+
     }
 }
