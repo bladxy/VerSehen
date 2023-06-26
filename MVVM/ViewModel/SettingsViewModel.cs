@@ -92,9 +92,10 @@ namespace VerSehen.MVVM.ViewModel
                         SetWindowLong(handle, GWL_STYLE, WS_VISIBLE);
                         MoveWindow(handle,0, 0, width, height,true);
                         SetForegroundWindow(handle);
-                        
-                    });
+                        _homeViewModel.formHandle = handle;
 
+                    });
+                    
                     StartWpfApplication();
                 });
             });
@@ -102,6 +103,7 @@ namespace VerSehen.MVVM.ViewModel
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
+
         }
 
         private static void StartWpfApplication()

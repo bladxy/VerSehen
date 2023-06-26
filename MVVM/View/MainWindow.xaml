@@ -30,7 +30,8 @@
         <ContentControl Focusable="True"
                         Grid.Column="1" 
                         Name="ContentControl"
-                        Content="{Binding Path=DataContext.Navigation.CurrentView, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                        Content="{Binding Path=DataContext.Navigation.CurrentView, RelativeSource={RelativeSource AncestorType=Window},
+                        UpdateSourceTrigger=PropertyChanged}"/>
 
     </Grid>
 </Window>

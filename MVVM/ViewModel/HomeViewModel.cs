@@ -7,6 +7,7 @@ using VerSehen.Core;
 using VerSehen.Services;
 using System.Diagnostics;
 using System.Windows.Forms.Integration;
+using System.Windows.Controls;
 
 namespace VerSehen.MVVM.ViewModel
 {
@@ -34,7 +35,8 @@ namespace VerSehen.MVVM.ViewModel
                 OnPropertyChanged();
             } 
         }
-        //Navigation.NavigateTo<SettingsViewModel>();
+        public IntPtr formHandle = new IntPtr();
+
         public RelayCommand NavigateToSettingsCommand { get; set; }
         public HomeViewModel(INavigationService navigation)
         {        
@@ -45,5 +47,6 @@ namespace VerSehen.MVVM.ViewModel
             }, o => true);
 
         }
+        
     }
 }
