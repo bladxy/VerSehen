@@ -5,6 +5,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Interop;
+using System.Windows.Forms;
 
 namespace VerSehen.Core
 {
@@ -173,6 +174,27 @@ namespace VerSehen.Core
             }
         }
 
+        public void ShowBitmap(Bitmap bitmap)
+        {
+            // Create a new form
+            Form form = new Form();
+
+            // Create a new PictureBox control
+            PictureBox pictureBox = new PictureBox();
+
+            // Set the PictureBox to display the bitmap
+            pictureBox.Image = bitmap;
+
+            // Adjust the size of the PictureBox to fit the bitmap
+            pictureBox.Width = bitmap.Width;
+            pictureBox.Height = bitmap.Height;
+
+            // Add the PictureBox to the form
+            form.Controls.Add(pictureBox);
+
+            // Display the form
+            form.ShowDialog();
+        }
 
         public void ChooseAction()
         {
@@ -244,6 +266,7 @@ namespace VerSehen.Core
                     // Capture the game window
                     Bitmap bitmap = CaptureWindow(formHandle);
 
+                    ShowBitmap(bitmap);
                     // Analyze the game state
                     AnalyzeGame(bitmap);
 
