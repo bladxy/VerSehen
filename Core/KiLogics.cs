@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Threading;
+using System.Windows.Interop;
 
 namespace VerSehen.Core
 {
@@ -26,7 +27,8 @@ namespace VerSehen.Core
         public const int VK_UP = 0x26; // Up arrow key code
         public const int VK_DOWN = 0x28; // Down arrow key code
 
-        public class RECT
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
         {
             public int Left;
             public int Top;
@@ -43,6 +45,11 @@ namespace VerSehen.Core
 
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
+            //System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            //{
+            //    hWnd = new System.Windows.Interop.WindowInteropHelper(System.Windows.Application.Current.MainWindow).Handle;
+            //});
+
             if (!IsWindow(hWnd))
             {
                 // Handle is not valid, return null or throw an exception

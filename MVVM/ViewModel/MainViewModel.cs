@@ -45,7 +45,7 @@ namespace VerSehen.MVVM.ViewModel
 
         }
 
-        private static HomeViewModel? GetHomeViewHandle()
+        public static HomeViewModel? GetHomeViewHandle()
         {
             // Find the ContentPresenter in the MainWindow
             MainWindow mainWindow = (MainWindow)Application.Current.MainWindow;
