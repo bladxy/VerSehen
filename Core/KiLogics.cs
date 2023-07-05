@@ -15,6 +15,7 @@ namespace VerSehen.Core
         private int appleX;
         private int appleY;
         private List<Point> snakeBody = new List<Point>();
+        public bool IsMoving { get; private set; }
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
@@ -62,22 +63,54 @@ namespace VerSehen.Core
 
         public void MoveRight()
         {
-            PressKey(VK_RIGHT);
+            if (CanMoveTo(snakeHeadX + 1, snakeHeadY))
+            {
+                PressKey(VK_RIGHT);
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
         }
 
         public void MoveLeft()
         {
-            PressKey(VK_LEFT);
+            if (CanMoveTo(snakeHeadX - 1, snakeHeadY))
+            {
+                PressKey(VK_LEFT);
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
         }
 
         public void MoveUp()
         {
-            PressKey(VK_UP);
+            if (CanMoveTo(snakeHeadX, snakeHeadY - 1))
+            {
+                PressKey(VK_UP);
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
         }
 
         public void MoveDown()
         {
-            PressKey(VK_DOWN);
+            if (CanMoveTo(snakeHeadX, snakeHeadY + 1))
+            {
+                PressKey(VK_DOWN);
+                IsMoving = true;
+            }
+            else
+            {
+                IsMoving = false;
+            }
         }
 
         public bool IsColorInRange(Color color, Color target, int range)
