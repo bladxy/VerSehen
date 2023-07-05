@@ -19,6 +19,7 @@ namespace VerSehen.MVVM.ViewModel
     class MainViewModel : Core.ViewModel
     {
         private SnakeAI snakeAI = new SnakeAI();
+       public HomeViewModel? homeview = GetHomeViewHandle();
 
         private INavigationService _navigation;
         public INavigationService Navigation
@@ -40,9 +41,8 @@ namespace VerSehen.MVVM.ViewModel
 
         public void SetFocusToWinFormsApp()
         {
-            HomeViewModel? homeview = GetHomeViewHandle();
 
-            SetForegroundWindow(homeview.formHandle);
+            SetForegroundWindow(this.homeview.formHandle);
 
         }
 
@@ -57,6 +57,7 @@ namespace VerSehen.MVVM.ViewModel
 
         public MainViewModel(INavigationService navigationService)
         {
+            HomeViewModel? homeview = GetHomeViewHandle();
             Navigation = navigationService;
             NavigateToHomeCommand = new RelayCommand(o => { Navigation.NavigateTo<HomeViewModel>(); }, o => true);
             NavigateToSettingsCommand = new RelayCommand(o => { Navigation.NavigateTo<SettingsViewModel>(); }, o => true);
@@ -64,7 +65,7 @@ namespace VerSehen.MVVM.ViewModel
             {
                 Navigation.NavigateTo<HomeViewModel>();
                 SetFocusToWinFormsApp();
-                snakeAI.Start();
+                //snakeAI.Start(homeview.formHandle);
             }, o => true);
         }
     }

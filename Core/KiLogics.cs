@@ -9,7 +9,6 @@ namespace VerSehen.Core
 {
     public class SnakeAI
     {
-        private IntPtr gameWindowHandle;
         private int snakeHeadX;
         private int snakeHeadY;
         private int appleX;
@@ -218,7 +217,7 @@ namespace VerSehen.Core
             return !snakeBody.Contains(new Point(x, y));
         }
 
-        public void Start()
+        public void Start(nint formHandle)
         {
             // Start a new thread to run the AI logic
             new Thread(() =>
@@ -226,7 +225,7 @@ namespace VerSehen.Core
                 while (true) // Loop forever, you might want to add a condition to stop the AI
                 {
                     // Capture the game window
-                    Bitmap bitmap = CaptureWindow(gameWindowHandle);
+                    Bitmap bitmap = CaptureWindow(formHandle);
 
                     // Analyze the game state
                     AnalyzeGame(bitmap);
