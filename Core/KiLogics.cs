@@ -9,6 +9,13 @@ namespace VerSehen.Core
 {
     public class SnakeAI
     {
+        private IntPtr gameWindowHandle;
+        private int snakeHeadX;
+        private int snakeHeadY;
+        private int appleX;
+        private int appleY;
+        private List<Point> snakeBody = new List<Point>();
+
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
 
@@ -102,7 +109,7 @@ namespace VerSehen.Core
             }
         }
 
-        public void ChooseAction(int snakeHeadX, int snakeHeadY, int appleX, int appleY, List<Point> snakeBody)
+        public void ChooseAction()
         {
             if (snakeHeadX < appleX && !snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
             {
@@ -136,7 +143,7 @@ namespace VerSehen.Core
                     AnalyzeGame(bitmap);
 
                     // Choose an action based on the current game state
-                    ChooseAction(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
+                    ChooseAction();
 
                     // Wait a bit before the next iteration
                     Thread.Sleep(100);
