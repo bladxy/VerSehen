@@ -80,8 +80,17 @@ namespace VerSehen.Core
             PressKey(VK_DOWN);
         }
 
+        public bool IsColorInRange(Color color, Color target, int range)
+        {
+            return Math.Abs(color.R - target.R) <= range &&
+                   Math.Abs(color.G - target.G) <= range &&
+                   Math.Abs(color.B - target.B) <= range;
+        }
+
         public void AnalyzeGame(Bitmap bitmap)
         {
+            // ...
+
             Color bodyColor = ColorTranslator.FromHtml("#80FF80");
             Color appleColor = ColorTranslator.FromHtml("#FF6666");
             Color eyeColor1 = ColorTranslator.FromHtml("#F2F2F2");
@@ -93,15 +102,15 @@ namespace VerSehen.Core
                 {
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    if (pixelColor == bodyColor)
+                    if (IsColorInRange(pixelColor, bodyColor, 10))
                     {
-                        // This pixel is part of the snake's body
+                        // This pixel is part of the snake body
                     }
-                    else if (pixelColor == appleColor)
+                    else if (IsColorInRange(pixelColor, appleColor, 10))
                     {
                         // This pixel is part of the apple
                     }
-                    else if (pixelColor == eyeColor1 || pixelColor == eyeColor2)
+                    else if (IsColorInRange(pixelColor, eyeColor1, 10) || IsColorInRange(pixelColor, eyeColor2, 10))
                     {
                         // This pixel is part of the snake's eyes
                     }
