@@ -89,12 +89,13 @@ namespace VerSehen.Core
 
         public void AnalyzeGame(Bitmap bitmap)
         {
-            // ...
 
             Color bodyColor = ColorTranslator.FromHtml("#80FF80");
             Color appleColor = ColorTranslator.FromHtml("#FF6666");
             Color eyeColor1 = ColorTranslator.FromHtml("#F2F2F2");
             Color eyeColor2 = ColorTranslator.FromHtml("#1A1A1A");
+
+            snakeBody.Clear();
 
             for (int y = 0; y < bitmap.Height; y++)
             {
@@ -105,36 +106,76 @@ namespace VerSehen.Core
                     if (IsColorInRange(pixelColor, bodyColor, 10))
                     {
                         // This pixel is part of the snake body
+                        snakeBody.Add(new Point(x, y));
                     }
                     else if (IsColorInRange(pixelColor, appleColor, 10))
                     {
                         // This pixel is part of the apple
+                        appleX = x;
+                        appleY = y;
                     }
                     else if (IsColorInRange(pixelColor, eyeColor1, 10) || IsColorInRange(pixelColor, eyeColor2, 10))
                     {
                         // This pixel is part of the snake's eyes
+                        snakeHeadX = x;
+                        snakeHeadY = y;
                     }
                 }
             }
         }
 
+
         public void ChooseAction()
         {
-            if (snakeHeadX < appleX && !snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
+            // Calculate the direction from the snake head to the apple
+            int dx = appleX - snakeHeadX;
+            int dy = appleY - snakeHeadY;
+
+            // Try to move in the direction of the apple
+            if (Math.Abs(dx) > Math.Abs(dy))
             {
-                MoveRight();
+                // The apple is farther in the x direction
+                if (dx > 0 && !snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
+                {
+                    MoveRight();
+                }
+                else if (!snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
+                {
+                    MoveLeft();
+                }
             }
-            else if (snakeHeadX > appleX && !snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
+            else
             {
-                MoveLeft();
+                // The apple is farther in the y direction
+                if (dy > 0 && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
+                {
+                    MoveDown();
+                }
+                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
+                {
+                    MoveUp();
+                }
             }
-            else if (snakeHeadY < appleY && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
+
+            // If we couldn't move in the direction of the apple, try to move in a safe direction
+            if (!IsMoving)
             {
-                MoveDown();
-            }
-            else if (snakeHeadY > appleY && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
-            {
-                MoveUp();
+                if (!snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
+                {
+                    MoveRight();
+                }
+                else if (!snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
+                {
+                    MoveLeft();
+                }
+                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
+                {
+                    MoveDown();
+                }
+                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
+                {
+                    MoveUp();
+                }
             }
         }
 
