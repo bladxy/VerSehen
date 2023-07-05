@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Interop;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace VerSehen.Core
 {
@@ -17,6 +18,18 @@ namespace VerSehen.Core
         private int appleY;
         private List<Point> snakeBody = new List<Point>();
         public bool IsMoving { get; private set; }
+
+        // Q-table
+        private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
+
+        // Learning rate
+        private double alpha = 0.5;
+
+        // Discount factor
+        private double gamma = 0.9;
+
+        // Exploration rate
+        private double epsilon = 0.1;
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
