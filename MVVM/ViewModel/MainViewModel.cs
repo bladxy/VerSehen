@@ -64,6 +64,7 @@ namespace VerSehen.MVVM.ViewModel
             {
                 Navigation.NavigateTo<HomeViewModel>();
                 SetFocusToWinFormsApp();
+                snakeAI.Start();
             }, o => true);
         }
     }

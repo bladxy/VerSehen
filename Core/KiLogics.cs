@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace VerSehen.Core
 {
@@ -121,6 +122,27 @@ namespace VerSehen.Core
             }
         }
 
+        public void Start()
+        {
+            // Start a new thread to run the AI logic
+            new Thread(() =>
+            {
+                while (true) // Loop forever, you might want to add a condition to stop the AI
+                {
+                    // Capture the game window
+                    Bitmap bitmap = CaptureWindow(gameWindowHandle);
+
+                    // Analyze the game state
+                    AnalyzeGame(bitmap);
+
+                    // Choose an action based on the current game state
+                    ChooseAction(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
+
+                    // Wait a bit before the next iteration
+                    Thread.Sleep(100);
+                }
+            }).Start();
+        }
 
     }
 }
