@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using System.Collections.Generic;
 
 namespace VerSehen.Core
 {
@@ -100,25 +101,26 @@ namespace VerSehen.Core
             }
         }
 
-        public void ChooseAction(int snakeHeadX, int snakeHeadY, int appleX, int appleY)
+        public void ChooseAction(int snakeHeadX, int snakeHeadY, int appleX, int appleY, List<Point> snakeBody)
         {
-            if (snakeHeadX < appleX)
+            if (snakeHeadX < appleX && !snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
             {
                 MoveRight();
             }
-            else if (snakeHeadX > appleX)
+            else if (snakeHeadX > appleX && !snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
             {
                 MoveLeft();
             }
-            else if (snakeHeadY < appleY)
+            else if (snakeHeadY < appleY && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
             {
                 MoveDown();
             }
-            else if (snakeHeadY > appleY)
+            else if (snakeHeadY > appleY && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
             {
                 MoveUp();
             }
         }
+
 
     }
 }
