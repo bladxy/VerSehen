@@ -37,8 +37,18 @@ namespace VerSehen.Core
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
+
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
+            if (!IsWindow(hWnd))
+            {
+                // Handle is not valid, return null or throw an exception
+                return null;
+            }
+
             RECT rect = new RECT();
             GetWindowRect(hWnd, ref rect);
 
@@ -217,7 +227,7 @@ namespace VerSehen.Core
             return !snakeBody.Contains(new Point(x, y));
         }
 
-        public void Start(nint formHandle)
+        public void Start(IntPtr formHandle)
         {
             // Start a new thread to run the AI logic
             new Thread(() =>
