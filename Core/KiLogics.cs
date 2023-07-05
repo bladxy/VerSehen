@@ -179,6 +179,12 @@ namespace VerSehen.Core
             }
         }
 
+        public bool CanMoveTo(int x, int y)
+        {
+            // Check if the given position is part of the snake's body
+            return !snakeBody.Contains(new Point(x, y));
+        }
+
         public void Start()
         {
             // Start a new thread to run the AI logic
