@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace VerSehen.MVVM.Model
 {
-    internal class Action
+
+    public enum Action
     {
+        MoveUp,
+        MoveDown,
+        MoveLeft,
+        MoveRight
     }
 }
