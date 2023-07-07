@@ -6,13 +6,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Interop;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 using System.Linq;
 
 namespace VerSehen.Core
 {
     public class SnakeAI
     {
+        private Random random = new Random();
         private int snakeHeadX;
         private int snakeHeadY;
         private int appleX;
@@ -64,7 +64,6 @@ namespace VerSehen.Core
             {
                 Q[oldState] = new Dictionary<Action, double>();
             }
-
             if (!Q[oldState].ContainsKey(action))
             {
                 Q[oldState][action] = 0;
@@ -79,6 +78,7 @@ namespace VerSehen.Core
 
         private State GetState()
         {
+            // Implement this method to get the current state of the game
             return new State(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
         }
 
@@ -272,13 +272,14 @@ namespace VerSehen.Core
 
         public Action ChooseAction(State state)
         {
-            if (!Q.ContainsKey(state) || Random.NextDouble() < epsilon)
+            if (!Q.ContainsKey(state) || random.NextDouble() < epsilon)
             {
-                return (Action)Random.Next(Enum.GetNames(typeof(Action)).Length);
+                return (Action)random.Next(Enum.GetNames(typeof(Action)).Length);
             }
 
             return Q[state].OrderByDescending(x => x.Value).First().Key;
         }
+
 
         public void Learn(IntPtr formHandle)
         {
