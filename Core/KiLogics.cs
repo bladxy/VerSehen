@@ -77,6 +77,24 @@ namespace VerSehen.Core
             Q[oldState][action] = newQValue;
         }
 
+        private State GetState()
+        {
+            // Implement this method to get the current state of the game
+            throw new NotImplementedException();
+        }
+
+        private double GetReward(State state)
+        {
+            // Implement this method to calculate the reward for the given state
+            throw new NotImplementedException();
+        }
+
+        private void PerformAction(Action action)
+        {
+            // Implement this method to perform the given action in the game
+            throw new NotImplementedException();
+        }
+
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
             //System.Windows.Application.Current.Dispatcher.Invoke(() =>
