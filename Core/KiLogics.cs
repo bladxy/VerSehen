@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Interop;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
+using System.Linq;
 
 namespace VerSehen.Core
 {
@@ -56,6 +57,25 @@ namespace VerSehen.Core
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool IsWindow(IntPtr hWnd);
+
+        public void UpdateQTable(State oldState, Action action, State newState, double reward)
+        {
+            if (!Q.ContainsKey(oldState))
+            {
+                Q[oldState] = new Dictionary<Action, double>();
+            }
+
+            if (!Q[oldState].ContainsKey(action))
+            {
+                Q[oldState][action] = 0;
+            }
+
+            double oldQValue = Q[oldState][action];
+            double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
+            double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
+
+            Q[oldState][action] = newQValue;
+        }
 
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
