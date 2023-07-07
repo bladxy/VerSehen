@@ -79,20 +79,43 @@ namespace VerSehen.Core
 
         private State GetState()
         {
-            // Implement this method to get the current state of the game
-            throw new NotImplementedException();
+            return new State(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
         }
+
 
         private double GetReward(State state)
         {
-            // Implement this method to calculate the reward for the given state
-            throw new NotImplementedException();
+            if (state.IsGameOver)
+            {
+                return -100.0;
+            }
+            else if (state.HasEatenApple)
+            {
+                return 100.0;
+            }
+            else
+            {
+                return 0.0;
+            }
         }
 
         private void PerformAction(Action action)
         {
-            // Implement this method to perform the given action in the game
-            throw new NotImplementedException();
+            switch (action)
+            {
+                case Action.MoveUp:
+                    MoveUp();
+                    break;
+                case Action.MoveDown:
+                    MoveDown();
+                    break;
+                case Action.MoveLeft:
+                    MoveLeft();
+                    break;
+                case Action.MoveRight:
+                    MoveRight();
+                    break;
+            }
         }
 
         public Bitmap CaptureWindow(IntPtr hWnd)
