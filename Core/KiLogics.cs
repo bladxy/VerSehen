@@ -78,7 +78,6 @@ namespace VerSehen.Core
 
         private State GetState()
         {
-            // Implement this method to get the current state of the game
             return new State(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
         }
 
@@ -120,10 +119,7 @@ namespace VerSehen.Core
 
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
-            //System.Windows.Application.Current.Dispatcher.Invoke(() =>
-            //{
-            //    hWnd = new System.Windows.Interop.WindowInteropHelper(System.Windows.Application.Current.MainWindow).Handle;
-            //});
+           
 
             if (!IsWindow(hWnd))
             {
