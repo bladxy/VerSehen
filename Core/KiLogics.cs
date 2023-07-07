@@ -17,6 +17,8 @@ namespace VerSehen.Core
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
         private State currentState;
         private Action currentAction;
+        private State state;
+        private Action action;
         private double alpha = 0.5;
         private double gamma = 0.9;
         private double epsilon = 0.1;
