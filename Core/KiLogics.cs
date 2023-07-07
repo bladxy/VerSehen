@@ -247,59 +247,39 @@ namespace VerSehen.Core
             form.ShowDialog();
         }
 
-        public void ChooseAction()
+        public Action ChooseAction(State state)
         {
-            // Calculate the direction from the snake head to the apple
-            int dx = appleX - snakeHeadX;
-            int dy = appleY - snakeHeadY;
-
-            // Try to move in the direction of the apple
-            if (Math.Abs(dx) > Math.Abs(dy))
+            if (!Q.ContainsKey(state) || Random.NextDouble() < epsilon)
             {
-                // The apple is farther in the x direction
-                if (dx > 0 && !snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
-                {
-                    MoveRight();
-                }
-                else if (!snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
-                {
-                    MoveLeft();
-                }
-            }
-            else
-            {
-                // The apple is farther in the y direction
-                if (dy > 0 && !snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
-                {
-                    MoveDown();
-                }
-                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
-                {
-                    MoveUp();
-                }
+                return (Action)Random.Next(Enum.GetNames(typeof(Action)).Length);
             }
 
-            // If we couldn't move in the direction of the apple, try to move in a safe direction
-            if (!IsMoving)
+            return Q[state].OrderByDescending(x => x.Value).First().Key;
+        }
+
+        public void Learn(IntPtr formHandle)
+        {
+            while (true)
             {
-                if (!snakeBody.Contains(new Point(snakeHeadX + 1, snakeHeadY)))
-                {
-                    MoveRight();
-                }
-                else if (!snakeBody.Contains(new Point(snakeHeadX - 1, snakeHeadY)))
-                {
-                    MoveLeft();
-                }
-                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY + 1)))
-                {
-                    MoveDown();
-                }
-                else if (!snakeBody.Contains(new Point(snakeHeadX, snakeHeadY - 1)))
-                {
-                    MoveUp();
-                }
+                Bitmap bitmap = CaptureWindow(formHandle);
+                AnalyzeGame(bitmap);
+
+                State currentState = GetState();
+                Action action = ChooseAction(currentState);
+                PerformAction(action);
+
+                Bitmap newBitmap = CaptureWindow(formHandle);
+                AnalyzeGame(newBitmap);
+
+                State newState = GetState();
+                double reward = GetReward(newState);
+
+                UpdateQTable(currentState, action, newState, reward);
+
+                Thread.Sleep(100);
             }
         }
+
 
         public bool CanMoveTo(int x, int y)
         {
