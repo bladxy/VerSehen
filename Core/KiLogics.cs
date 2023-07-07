@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -13,23 +14,9 @@ namespace VerSehen.Core
     public class SnakeAI
     {
         private Random random = new Random();
-        private int snakeHeadX;
-        private int snakeHeadY;
-        private int appleX;
-        private int appleY;
-        private List<Point> snakeBody = new List<Point>();
-        public bool IsMoving { get; private set; }
-
-        // Q-table
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
-
-        // Learning rate
         private double alpha = 0.5;
-
-        // Discount factor
         private double gamma = 0.9;
-
-        // Exploration rate
         private double epsilon = 0.1;
 
         [DllImport("user32.dll")]
