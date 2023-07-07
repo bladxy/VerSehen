@@ -15,6 +15,8 @@ namespace VerSehen.Core
     {
         private Random random = new Random();
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
+        private State currentState;
+        private Action currentAction;
         private double alpha = 0.5;
         private double gamma = 0.9;
         private double epsilon = 0.1;
@@ -270,19 +272,14 @@ namespace VerSehen.Core
             {
                 Bitmap bitmap = CaptureWindow(formHandle);
                 AnalyzeGame(bitmap);
-
-                State currentState = GetState();
-                Action action = ChooseAction(currentState);
-                PerformAction(action);
-
+                currentState = GetState();
+                currentAction = ChooseAction(currentState);
+                PerformAction(currentAction);
                 Bitmap newBitmap = CaptureWindow(formHandle);
                 AnalyzeGame(newBitmap);
-
                 State newState = GetState();
                 double reward = GetReward(newState);
-
-                UpdateQTable(currentState, action, newState, reward);
-
+                UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
             }
         }
@@ -296,22 +293,15 @@ namespace VerSehen.Core
 
         public void Start(IntPtr formHandle)
         {
-            // Start a new thread to run the AI logic
             new Thread(() =>
             {
-                while (true) // Loop forever, you might want to add a condition to stop the AI
+                while (true)
                 {
-                    // Capture the game window
                     Bitmap bitmap = CaptureWindow(formHandle);
-
-                    //ShowBitmap(bitmap);
-                    // Analyze the game state
                     AnalyzeGame(bitmap);
-
-                    // Choose an action based on the current game state
-                    ChooseAction();
-
-                    // Wait a bit before the next iteration
+                    currentState = GetState();
+                    currentAction = ChooseAction(currentState);
+                    PerformAction(currentAction);
                     Thread.Sleep(100);
                 }
             }).Start();
