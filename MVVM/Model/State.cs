@@ -16,6 +16,7 @@ namespace VerSehen.MVVM.Model
         public List<Point> SnakeBody { get; set; }
         public bool IsGameOver { get; set; }
         public bool HasEatenApple { get; set; }
+        public bool IsMoving { get; set; }
 
         public State(int snakeHeadX, int snakeHeadY, int appleX, int appleY, List<Point> snakeBody)
         {

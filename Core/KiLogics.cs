@@ -193,50 +193,50 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
             {
                 PressKey(VK_RIGHT);
-                IsMoving = true;
+               currentState.IsMoving = true;
             }
             else
             {
-                IsMoving = false;
+                currentState.IsMoving = false;
             }
         }
 
         public void MoveLeft()
         {
-            if (CanMoveTo(snakeHeadX - 1, snakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadX - 1, currentState.SnakeHeadY))
             {
                 PressKey(VK_LEFT);
-                IsMoving = true;
+                currentState.IsMoving = true;
             }
             else
             {
-                IsMoving = false;
+                currentState.IsMoving = false;
             }
         }
 
         public void MoveUp()
         {
-            if (CanMoveTo(snakeHeadX, snakeHeadY - 1))
+            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY - 1))
             {
                 PressKey(VK_UP);
-                IsMoving = true;
+                currentState.IsMoving = true;
             }
             else
             {
-                IsMoving = false;
+                currentState.IsMoving = false;
             }
         }
 
         public void MoveDown()
         {
-            if (CanMoveTo(snakeHeadX, snakeHeadY + 1))
+            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY + 1))
             {
                 PressKey(VK_DOWN);
-                IsMoving = true;
+                currentState.IsMoving = true;
             }
             else
             {
-                IsMoving = false;
+                currentState.IsMoving = false;
             }
         }
 
