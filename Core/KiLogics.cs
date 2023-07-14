@@ -22,7 +22,9 @@ namespace VerSehen.Core
         private Action action;
         private double alpha = 0.5;
         private double gamma = 0.9;
-        private double epsilon = 0.1;
+        private double epsilon = 1.0;  // Startwert für Epsilon
+        private double minEpsilon = 0.01;  // Minimaler Wert für Epsilon
+        private double epsilonDecay = 0.995;  // Faktor, mit dem Epsilon in jedem Schritt reduziert wird
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
