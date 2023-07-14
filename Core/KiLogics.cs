@@ -387,9 +387,11 @@ namespace VerSehen.Core
 
         public void SaveQTable(string filePath)
         {
+            var qTableCopy = Q.ToDictionary(entry => entry.Key, entry => entry.Value);
+
             using (var writer = new StreamWriter(filePath))
             {
-                foreach (var entry in Q)
+                foreach (var entry in qTableCopy)
                 {
                     var stateString = JsonConvert.SerializeObject(entry.Key);
                     var actionValuesString = JsonConvert.SerializeObject(entry.Value);
