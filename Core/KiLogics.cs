@@ -324,20 +324,25 @@ namespace VerSehen.Core
 
         public Action ChooseAction(State state)
         {
-            // Get a list of all possible actions
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-
-            // Remove any actions that lead to invalid positions
             actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
 
-            // If there are no valid actions left, return a default action
             if (actions.Count == 0)
             {
-                return Action.MoveUp; // Or whatever default action you want
+                return Action.MoveUp;
             }
 
-            // Choose a random action from the remaining valid actions
-            return actions[random.Next(actions.Count)];
+            // Epsilon-Greedy-Algorithmus
+            if (random.NextDouble() < epsilon)
+            {
+                // Exploration: Wählen Sie eine zufällige Aktion
+                return actions[random.Next(actions.Count)];
+            }
+            else
+            {
+                // Ausbeutung: Wählen Sie die Aktion mit dem höchsten Q-Wert
+                return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
+            }
         }
 
 
@@ -363,6 +368,7 @@ namespace VerSehen.Core
                 AnalyzeGame(newBitmap);
                 State newState = GetState();
                 double reward = GetReward(newState);
+                epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
 
