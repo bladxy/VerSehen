@@ -140,7 +140,7 @@ namespace VerSehen.Core
 
         public void MoveRight()
         {
-            if (CanMoveTo(snakeHeadX + 1, snakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
             {
                 PressKey(VK_RIGHT);
                 IsMoving = true;
