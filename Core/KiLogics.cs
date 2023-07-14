@@ -110,7 +110,8 @@ namespace VerSehen.Core
             }
             if (!Q[oldState].ContainsKey(action))
             {
-                Q[oldState][action] = 0;
+                // Initialisierung des Q-Werts auf einen kleinen zufälligen Wert
+                Q[oldState][action] = random.NextDouble() * 0.1;
             }
 
             double oldQValue = Q[oldState][action];
@@ -138,7 +139,7 @@ namespace VerSehen.Core
             }
             else
             {
-                return 0.0;
+                return -0.1;
             }
         }
 
@@ -331,6 +332,8 @@ namespace VerSehen.Core
 
         public void Learn(IntPtr formHandle)
         {
+            LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+
             while (true)
             {
                 Bitmap bitmap = CaptureWindow(formHandle);
@@ -344,7 +347,16 @@ namespace VerSehen.Core
                 double reward = GetReward(newState);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
+
+                // Speichern der Q-Tabelle periodisch
+                if (/* Bedingung, z.B. alle 1000 Schritte */)
+                {
+                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+                }
             }
+
+            // Speichern der Q-Tabelle am Ende
+            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
         }
 
         public void SaveQTable(string filePath)
@@ -380,8 +392,6 @@ namespace VerSehen.Core
                 }
             }
         }
-
-
 
         public void Start(IntPtr formHandle)
         {
