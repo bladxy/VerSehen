@@ -422,25 +422,12 @@ namespace VerSehen.Core
         public void Start(IntPtr formHandle)
         {
             cancellationTokenSource = new CancellationTokenSource();
-
             new Thread(() =>
             {
-                while (true)
-                {
-                    if (cancellationTokenSource.Token.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    Bitmap bitmap = CaptureWindow(formHandle);
-                    AnalyzeGame(bitmap);
-                    currentState = GetState();
-                    currentAction = ChooseAction(currentState);
-                    PerformAction(currentAction);
-                    Thread.Sleep(100);
-                }
+                Learn(formHandle);
             }).Start();
         }
+
 
         public void Stop()
         {
