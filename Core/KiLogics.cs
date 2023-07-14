@@ -48,6 +48,56 @@ namespace VerSehen.Core
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool IsWindow(IntPtr hWnd);
 
+        public bool CanMoveTo(int x, int y)
+        {
+            // Check if the new position is in the snake's body
+            if (currentState.SnakeBody.Contains(new Point(x, y)))
+            {
+                // If it is, check if it's the tail (i.e., it will move in the next round)
+                if (new Point(x, y) == currentState.SnakeBody[0])
+                {
+                    // The tail will move in the next round, so we can move to this position
+                    return true;
+                }
+                else
+                {
+                    // It's not the tail, so we can't move to this position
+                    return false;
+                }
+            }
+            else
+            {
+                // The new position is not in the snake's body, so we can move to this position
+                return true;
+            }
+        }
+
+        private int GetXOffset(Action action)
+        {
+            switch (action)
+            {
+                case Action.MoveRight:
+                    return 1;
+                case Action.MoveLeft:
+                    return -1;
+                default:
+                    return 0;
+            }
+        }
+
+        private int GetYOffset(Action action)
+        {
+            switch (action)
+            {
+                case Action.MoveUp:
+                    return -1;
+                case Action.MoveDown:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
         public void UpdateQTable(State oldState, Action action, State newState, double reward)
         {
             if (!Q.ContainsKey(oldState))
@@ -258,12 +308,20 @@ namespace VerSehen.Core
 
         public Action ChooseAction(State state)
         {
-            if (!Q.ContainsKey(state) || random.NextDouble() < epsilon)
+            // Get a list of all possible actions
+            var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
+
+            // Remove any actions that lead to invalid positions
+            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
+
+            // If there are no valid actions left, return a default action
+            if (actions.Count == 0)
             {
-                return (Action)random.Next(Enum.GetNames(typeof(Action)).Length);
+                return Action.MoveUp; // Or whatever default action you want
             }
 
-            return Q[state].OrderByDescending(x => x.Value).First().Key;
+            // Choose a random action from the remaining valid actions
+            return actions[random.Next(actions.Count)];
         }
 
 
@@ -283,13 +341,6 @@ namespace VerSehen.Core
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
             }
-        }
-
-
-        public bool CanMoveTo(int x, int y)
-        {
-            // Check if the given position is part of the snake's body
-            return !currentState.SnakeBody.Contains(new Point(x, y));
         }
 
         public void Start(IntPtr formHandle)
