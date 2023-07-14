@@ -13,13 +13,14 @@ using Emgu.CV.Structure;
 using System.Drawing.Imaging;
 using static System.Windows.Forms.RibbonHelpers.WinApi;
 using System.Drawing;
+using System.Windows.Input;
 
 namespace VerSehen.MVVM.ViewModel
 {
     class MainViewModel : Core.ViewModel
     {
         private SnakeAI snakeAI = new SnakeAI();
-
+        public ICommand StopKiCommand { get; }
         private INavigationService _navigation;
         public INavigationService Navigation
         {
@@ -67,6 +68,11 @@ namespace VerSehen.MVVM.ViewModel
                 SetFocusToWinFormsApp(homeview);
                 snakeAI.Start(homeview.formHandle);
             }, o => true);
+            StopKiCommand = new RelayCommand(o =>
+            {
+                snakeAI.Stop();
+                snakeAI.SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+            });
         }
     }
 }

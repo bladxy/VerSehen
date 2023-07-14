@@ -24,6 +24,10 @@
             <Button Content="Ki Start"
                     Height="25"
                     Command="{Binding Path=DataContext.StartKi, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <Button Content="Stop"
+                    Height="25"
+                    Command="{Binding StopKiCommand}" />
+
 
         </StackPanel>
 

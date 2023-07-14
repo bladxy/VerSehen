@@ -371,7 +371,7 @@ namespace VerSehen.Core
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
-
+                Console.WriteLine($"Reward: {reward}");
                 counter++;
 
                 // Speichern der Q-Tabelle periodisch
