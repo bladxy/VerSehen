@@ -19,7 +19,6 @@ namespace VerSehen.Core
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
         private State currentState;
         private Action currentAction;
-        private Action action;
         private double alpha = 0.5;
         private double gamma = 0.9;
         private double epsilon = 1.0;  // Startwert für Epsilon
@@ -164,7 +163,7 @@ namespace VerSehen.Core
 
         public Bitmap CaptureWindow(IntPtr hWnd)
         {
-           
+
 
             if (!IsWindow(hWnd))
             {
@@ -198,7 +197,7 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
             {
                 PressKey(VK_RIGHT);
-               currentState.IsMoving = true;
+                currentState.IsMoving = true;
             }
             else
             {
@@ -286,6 +285,17 @@ namespace VerSehen.Core
                         currentState.SnakeHeadY = y;
                     }
                 }
+            }
+
+            if (currentState.SnakeBody.Contains(new Point(currentState.SnakeHeadX, currentState.SnakeHeadY)) ||
+               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= /* Spielfeldbreite */ ||
+               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= /* Spielfeldhöhe */)
+            {
+                currentState.IsGameOver = true;
+            }
+            else
+            {
+                currentState.IsGameOver = false;
             }
         }
 
