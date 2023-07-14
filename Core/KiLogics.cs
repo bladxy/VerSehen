@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -350,7 +351,9 @@ namespace VerSehen.Core
             {
                 foreach (var entry in Q)
                 {
-                    writer.WriteLine($"{entry.Key}: {string.Join(", ", entry.Value.Select(x => $"{x.Key}: {x.Value}"))}");
+                    var stateString = JsonConvert.SerializeObject(entry.Key);
+                    var actionValuesString = JsonConvert.SerializeObject(entry.Value);
+                    writer.WriteLine($"{stateString}: {actionValuesString}");
                 }
             }
         }
@@ -368,25 +371,14 @@ namespace VerSehen.Core
                 while ((line = reader.ReadLine()) != null)
                 {
                     var parts = line.Split(':');
-                    var state = parts[0];
-                    var actions = parts[1].Split(',');
+                    var state = JsonConvert.DeserializeObject<State>(parts[0]);
+                    var actionValues = JsonConvert.DeserializeObject<Dictionary<Action, double>>(parts[1]);
 
-                    foreach (var action in actions)
-                    {
-                        var actionParts = action.Split(':');
-                        var actionName = actionParts[0].Trim();
-                        var qValue = double.Parse(actionParts[1]);
-
-                        if (!Q.ContainsKey(state))
-                        {
-                            Q[state] = new Dictionary<Action, double>();
-                        }
-
-                        Q[state][actionName] = qValue;
-                    }
+                    Q[state] = actionValues;
                 }
             }
         }
+
 
 
         public void Start(IntPtr formHandle)
