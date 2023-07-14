@@ -334,6 +334,8 @@ namespace VerSehen.Core
         {
             LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
 
+            int counter = 0;
+
             while (true)
             {
                 Bitmap bitmap = CaptureWindow(formHandle);
@@ -348,15 +350,15 @@ namespace VerSehen.Core
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
 
+                counter++;
+
                 // Speichern der Q-Tabelle periodisch
-                if (/* Bedingung, z.B. alle 1000 Schritte */)
+                if (counter >= 1000)
                 {
                     SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+                    counter = 0;
                 }
             }
-
-            // Speichern der Q-Tabelle am Ende
-            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
         }
 
         public void SaveQTable(string filePath)
