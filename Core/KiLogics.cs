@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -380,7 +381,7 @@ namespace VerSehen.Core
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
-                Console.WriteLine($"Reward: {reward}");
+                Debug.WriteLine($"Reward: {reward}");
                 counter++;
 
                 // Speichern der Q-Tabelle periodisch
