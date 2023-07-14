@@ -17,7 +17,6 @@ namespace VerSehen.Core
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
         private State currentState;
         private Action currentAction;
-        private State state;
         private Action action;
         private double alpha = 0.5;
         private double gamma = 0.9;
@@ -69,7 +68,7 @@ namespace VerSehen.Core
 
         private State GetState()
         {
-            return new State(snakeHeadX, snakeHeadY, appleX, appleY, snakeBody);
+            return currentState;
         }
 
 
@@ -206,7 +205,7 @@ namespace VerSehen.Core
             Color eyeColor1 = ColorTranslator.FromHtml("#F2F2F2");
             Color eyeColor2 = ColorTranslator.FromHtml("#1A1A1A");
 
-            snakeBody.Clear();
+            currentState.SnakeBody.Clear();
 
             for (int y = 0; y < bitmap.Height; y++)
             {
@@ -217,19 +216,19 @@ namespace VerSehen.Core
                     if (IsColorInRange(pixelColor, bodyColor, 10))
                     {
                         // This pixel is part of the snake body
-                        snakeBody.Add(new Point(x, y));
+                        currentState.SnakeBody.Add(new Point(x, y));
                     }
                     else if (IsColorInRange(pixelColor, appleColor, 10))
                     {
                         // This pixel is part of the apple
-                        appleX = x;
-                        appleY = y;
+                        currentState.AppleX = x;
+                        currentState.AppleY = y;
                     }
                     else if (IsColorInRange(pixelColor, eyeColor1, 10) || IsColorInRange(pixelColor, eyeColor2, 10))
                     {
                         // This pixel is part of the snake's eyes
-                        snakeHeadX = x;
-                        snakeHeadY = y;
+                        currentState.SnakeHeadX = x;
+                        currentState.SnakeHeadY = y;
                     }
                 }
             }
@@ -290,7 +289,7 @@ namespace VerSehen.Core
         public bool CanMoveTo(int x, int y)
         {
             // Check if the given position is part of the snake's body
-            return !snakeBody.Contains(new Point(x, y));
+            return !currentState.SnakeBody.Contains(new Point(x, y));
         }
 
         public void Start(IntPtr formHandle)
