@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -342,6 +343,51 @@ namespace VerSehen.Core
                 Thread.Sleep(100);
             }
         }
+
+        public void SaveQTable(string filePath)
+        {
+            using (var writer = new StreamWriter(filePath))
+            {
+                foreach (var entry in Q)
+                {
+                    writer.WriteLine($"{entry.Key}: {string.Join(", ", entry.Value.Select(x => $"{x.Key}: {x.Value}"))}");
+                }
+            }
+        }
+
+        public void LoadQTable(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                return;
+            }
+
+            using (var reader = new StreamReader(filePath))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var parts = line.Split(':');
+                    var state = parts[0];
+                    var actions = parts[1].Split(',');
+
+                    foreach (var action in actions)
+                    {
+                        var actionParts = action.Split(':');
+                        var actionName = actionParts[0].Trim();
+                        var qValue = double.Parse(actionParts[1]);
+
+                        if (!Q.ContainsKey(state))
+                        {
+                            Q[state] = new Dictionary<Action, double>();
+                        }
+
+                        Q[state][actionName] = qValue;
+                    }
+                }
+            }
+        }
+
 
         public void Start(IntPtr formHandle)
         {
