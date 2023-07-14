@@ -18,13 +18,13 @@ namespace VerSehen.MVVM.Model
         public bool HasEatenApple { get; set; }
         public bool IsMoving { get; set; }
 
-        public State(int snakeHeadX, int snakeHeadY, int appleX, int appleY, List<Point> snakeBody)
+        public State(int snakeHeadX, int snakeHeadY, int appleX, int appleY)
         {
             SnakeHeadX = snakeHeadX;
             SnakeHeadY = snakeHeadY;
             AppleX = appleX;
             AppleY = appleY;
-            SnakeBody = snakeBody;
+            SnakeBody = new List<Point>();  // Initialisierung von SnakeBody
         }
     }
 }

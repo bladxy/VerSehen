@@ -339,7 +339,12 @@ namespace VerSehen.Core
             while (true)
             {
                 Bitmap bitmap = CaptureWindow(formHandle);
+                currentState = new State(0, 0, 0, 0);
                 AnalyzeGame(bitmap);
+                if (currentState.IsGameOver)
+                {
+                    break;
+                }
                 currentState = GetState();
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
