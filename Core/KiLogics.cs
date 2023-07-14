@@ -24,6 +24,7 @@ namespace VerSehen.Core
         private double epsilon = 1.0;  // Startwert für Epsilon
         private double minEpsilon = 0.01;  // Minimaler Wert für Epsilon
         private double epsilonDecay = 0.995;  // Faktor, mit dem Epsilon in jedem Schritt reduziert wird
+        private CancellationTokenSource cancellationTokenSource;
 
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, uint dwExtraInfo);
@@ -368,12 +369,14 @@ namespace VerSehen.Core
                 counter++;
 
                 // Speichern der Q-Tabelle periodisch
-                if (counter >= 1000)
+                if (counter >= 100)
                 {
                     SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
                     counter = 0;
                 }
             }
+
+            Stop();
         }
 
         public void SaveQTable(string filePath)
@@ -412,10 +415,17 @@ namespace VerSehen.Core
 
         public void Start(IntPtr formHandle)
         {
+            cancellationTokenSource = new CancellationTokenSource();
+
             new Thread(() =>
             {
                 while (true)
                 {
+                    if (cancellationTokenSource.Token.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     Bitmap bitmap = CaptureWindow(formHandle);
                     AnalyzeGame(bitmap);
                     currentState = GetState();
@@ -424,6 +434,11 @@ namespace VerSehen.Core
                     Thread.Sleep(100);
                 }
             }).Start();
+        }
+
+        public void Stop()
+        {
+            cancellationTokenSource.Cancel();
         }
 
     }
