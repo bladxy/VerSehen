@@ -46,6 +46,9 @@ namespace VerSehen.Core
         }
 
         [DllImport("user32.dll")]
+        static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
         public static extern IntPtr GetWindowRect(IntPtr hWnd, ref RECT rect);
 
         [DllImport("user32.dll")]
@@ -354,6 +357,12 @@ namespace VerSehen.Core
 
             while (true)
             {
+                if (GetForegroundWindow() != formHandle)
+                {
+                    // Wenn das Spiel-Fenster nicht den Fokus hat, brechen Sie die Schleife ab
+                    break;
+                }
+
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = new State(0, 0, 0, 0);
                 AnalyzeGame(bitmap);
@@ -381,7 +390,7 @@ namespace VerSehen.Core
                     counter = 0;
                 }
             }
-
+            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
             Stop();
         }
 
