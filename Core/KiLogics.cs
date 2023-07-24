@@ -217,7 +217,7 @@ namespace VerSehen.Core
 
         public void MoveLeft()
         {
-            if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadX - 1, currentState.SnakeHeadY)) // Änderung hier
             {
                 PressKey(VK_LEFT);
                 currentState.IsMoving = true;
@@ -243,7 +243,7 @@ namespace VerSehen.Core
 
         public void MoveDown()
         {
-            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY + 1))
+            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY - 1))
             {
                 PressKey(VK_DOWN);
                 currentState.IsMoving = true;
@@ -301,8 +301,8 @@ namespace VerSehen.Core
             currentState.BitmapHeight = bitmap.Height;
 
             if (currentState.SnakeBody.Contains(new Point(currentState.SnakeHeadX, currentState.SnakeHeadY)) ||
-               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width -1 ||
-               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height -1)
+               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width  ||
+               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height )
             {
                 currentState.IsGameOver = true;
             }
