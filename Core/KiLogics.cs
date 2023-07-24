@@ -341,8 +341,16 @@ namespace VerSehen.Core
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
             actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
 
+            if (!Q.ContainsKey(state))
+            {
+                // Wenn kein Eintrag existiert, erstellen Sie einen
+                Q[state] = new Dictionary<Action, double>();
+            }
+
+
             if (actions.Count > 0)
             {
+
                 // Wählen Sie die Aktion mit dem höchsten Q-Wert aus
                 Action bestAction = actions[0];
                 double bestQValue = Q[state][bestAction];
