@@ -343,8 +343,13 @@ namespace VerSehen.Core
 
             if (!Q.ContainsKey(state))
             {
-                // Wenn kein Eintrag existiert, erstellen Sie einen
                 Q[state] = new Dictionary<Action, double>();
+
+                // Initialisieren Sie das Dictionary für jede mögliche Aktion
+                foreach (Action action in actions)
+                {
+                    Q[state][action] = random.NextDouble() * 0.1;
+                }
             }
 
 
