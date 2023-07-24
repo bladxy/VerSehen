@@ -57,10 +57,10 @@ namespace VerSehen.Core
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool IsWindow(IntPtr hWnd);
 
-        public bool CanMoveTo(int x, int y, int bitmapWidth, int bitmapHeight)
+        public bool CanMoveTo(int x, int y)
         {
             // Prüfen, ob der Punkt innerhalb des Spielfelds liegt
-            if (x < 0 || x >= bitmapWidth || y < 0 || y >= bitmapHeight)
+            if (x < 0 || x >= currentState.BitmapWidth || y < 0 || y >= currentState.BitmapHeight)
             {
                 return false;
             }
@@ -214,9 +214,10 @@ namespace VerSehen.Core
             }
         }
 
+
         public void MoveLeft()
         {
-            if (CanMoveTo(currentState.SnakeHeadX - 1, currentState.SnakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
             {
                 PressKey(VK_LEFT);
                 currentState.IsMoving = true;
@@ -229,7 +230,7 @@ namespace VerSehen.Core
 
         public void MoveUp()
         {
-            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY - 1))
+            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY + 1))
             {
                 PressKey(VK_UP);
                 currentState.IsMoving = true;
@@ -296,6 +297,9 @@ namespace VerSehen.Core
                 }
             }
 
+            currentState.BitmapWidth = bitmap.Width; 
+            currentState.BitmapHeight = bitmap.Height;
+
             if (currentState.SnakeBody.Contains(new Point(currentState.SnakeHeadX, currentState.SnakeHeadY)) ||
                currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width -1 ||
                currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height -1)
@@ -333,7 +337,7 @@ namespace VerSehen.Core
         public Action ChooseAction(State state)
         {
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a), bitmap.Width, bitmap.Height));
+            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
 
             if (actions.Count == 0)
             {

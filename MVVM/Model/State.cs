@@ -17,6 +17,8 @@ namespace VerSehen.MVVM.Model
         public bool IsGameOver { get; set; }
         public bool HasEatenApple { get; set; }
         public bool IsMoving { get; set; }
+        public int BitmapWidth { get; set; }  // Neu
+        public int BitmapHeight { get; set; }
 
         public State(int snakeHeadX, int snakeHeadY, int appleX, int appleY)
         {
