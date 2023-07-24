@@ -343,8 +343,18 @@ namespace VerSehen.Core
 
             if (actions.Count > 0)
             {
-                // Wählen Sie eine Aktion aus der Liste der gültigen Aktionen
-                return actions[random.Next(actions.Count)];
+                // Wählen Sie die Aktion mit dem höchsten Q-Wert aus
+                Action bestAction = actions[0];
+                double bestQValue = Q[state][bestAction];
+                foreach (Action action in actions)
+                {
+                    if (Q[state][action] > bestQValue)
+                    {
+                        bestAction = action;
+                        bestQValue = Q[state][action];
+                    }
+                }
+                return bestAction;
             }
             else
             {
@@ -352,6 +362,7 @@ namespace VerSehen.Core
                 return Action.DoNothing;
             }
         }
+
 
 
 
