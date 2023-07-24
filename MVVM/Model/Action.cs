@@ -12,6 +12,7 @@ namespace VerSehen.MVVM.Model
         MoveUp,
         MoveDown,
         MoveLeft,
-        MoveRight
+        MoveRight,
+        DoNothing
     }
 }

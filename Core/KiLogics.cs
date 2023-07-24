@@ -59,9 +59,11 @@ namespace VerSehen.Core
 
         public bool CanMoveTo(int x, int y)
         {
+            Debug.WriteLine($"CanMoveTo called with x={x}, y={y}");
             // Prüfen, ob der Punkt innerhalb des Spielfelds liegt
             if (x < 0 || x >= currentState.BitmapWidth || y < 0 || y >= currentState.BitmapHeight)
             {
+                Debug.WriteLine("CanMoveTo returning false because position is out of bounds");
                 return false;
             }
 
@@ -339,23 +341,18 @@ namespace VerSehen.Core
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
             actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
 
-            if (actions.Count == 0)
+            if (actions.Count > 0)
             {
-                return Action.MoveUp;
-            }
-
-            // Epsilon-Greedy-Algorithmus
-            if (random.NextDouble() < epsilon)
-            {
-                // Exploration: Wählen Sie eine zufällige Aktion
+                // Wählen Sie eine Aktion aus der Liste der gültigen Aktionen
                 return actions[random.Next(actions.Count)];
             }
             else
             {
-                // Ausbeutung: Wählen Sie die Aktion mit dem höchsten Q-Wert
-                return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
+                // Wenn keine gültige Aktion vorhanden ist, tun Sie nichts
+                return Action.DoNothing;
             }
         }
+
 
 
         public void Learn(IntPtr formHandle)
