@@ -128,7 +128,7 @@ namespace VerSehen.Core
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
 
-            Q[oldState][action] = Q[oldState][action] + alpha * (reward + gamma * maxQ - Q[oldState][action]);
+            Q[oldState][action] = Q[oldState][action] + alpha * (reward + gamma * maxNewStateQValue - Q[oldState][action]);
 
             Console.WriteLine($"Updated Q-value for action: {action} in state: {oldState} to: {Q[oldState][action]}");
         }
