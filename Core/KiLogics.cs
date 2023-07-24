@@ -128,7 +128,9 @@ namespace VerSehen.Core
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
 
-            Q[oldState][action] = newQValue;
+            Q[oldState][action] = Q[oldState][action] + alpha * (reward + gamma * maxQ - Q[oldState][action]);
+
+            Console.WriteLine($"Updated Q-value for action: {action} in state: {oldState} to: {Q[oldState][action]}");
         }
 
         private State GetState()
@@ -353,27 +355,20 @@ namespace VerSehen.Core
             }
 
 
-            if (actions.Count > 0)
+            Action bestAction = actions[0];
+            double bestQValue = Q[state][bestAction];
+            foreach (Action action in actions)
             {
-
-                // Wählen Sie die Aktion mit dem höchsten Q-Wert aus
-                Action bestAction = actions[0];
-                double bestQValue = Q[state][bestAction];
-                foreach (Action action in actions)
+                if (Q[state][action] > bestQValue)
                 {
-                    if (Q[state][action] > bestQValue)
-                    {
-                        bestAction = action;
-                        bestQValue = Q[state][action];
-                    }
+                    bestAction = action;
+                    bestQValue = Q[state][action];
                 }
-                return bestAction;
             }
-            else
-            {
-                // Wenn keine gültige Aktion vorhanden ist, tun Sie nichts
-                return Action.DoNothing;
-            }
+
+            Console.WriteLine($"Choosing action: {bestAction} with Q-value: {bestQValue}");
+
+            return bestAction;
         }
 
 
