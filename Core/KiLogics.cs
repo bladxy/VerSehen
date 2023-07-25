@@ -58,27 +58,16 @@ namespace VerSehen.Core
 
         public bool CanMoveTo(int x, int y)
         {
-            // Check if the new position is in the snake's body
-            if (currentState.SnakeBody.Contains(new Point(x, y)))
+            if (currentState.SnakeHeadPositions.Contains(new Point(x, y)))
             {
-                // If it is, check if it's the tail (i.e., it will move in the next round)
-                if (new Point(x, y) == currentState.SnakeBody[0])
-                {
-                    // The tail will move in the next round, so we can move to this position
-                    return true;
-                }
-                else
-                {
-                    // It's not the tail, so we can't move to this position
-                    return false;
-                }
+                return false;
             }
             else
             {
-                // The new position is not in the snake's body, so we can move to this position
                 return true;
             }
         }
+
 
         private int GetXOffset(Action action)
         {
@@ -137,7 +126,7 @@ namespace VerSehen.Core
             {
                 return -100.0;
             }
-            else if (state.HasEatenApple)
+            else if (state.SnakeHeadPositions.Contains(state.ApplePosition))
             {
                 return 100.0;
             }
@@ -146,6 +135,7 @@ namespace VerSehen.Core
                 return -0.1;
             }
         }
+
 
         private void PerformAction(Action action)
         {
