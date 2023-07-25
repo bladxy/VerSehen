@@ -366,6 +366,12 @@ namespace VerSehen.Core
 
             int counter = 0;
 
+            // Start the game
+            StartGame();
+
+            // Wait for the game to start
+            Thread.Sleep(3000);
+
             while (true)
             {
                 if (GetForegroundWindow() != formHandle)
@@ -375,11 +381,16 @@ namespace VerSehen.Core
                 }
 
                 Bitmap bitmap = CaptureWindow(formHandle);
+                //ShowBitmap(bitmap);
                 currentState = new State(0, 0, 0, 0);
                 AnalyzeGame(bitmap);
                 if (currentState.IsGameOver)
                 {
-                    break;
+                    // If the game is over, start it again
+                    StartGame();
+
+                    // Wait for the game to start
+                    Thread.Sleep(3000);
                 }
                 currentState = GetState();
                 currentAction = ChooseAction(currentState);
@@ -439,6 +450,13 @@ namespace VerSehen.Core
                     Q[state] = actionValues;
                 }
             }
+        }
+
+        public void StartGame()
+        {
+            // Simulate pressing the 'Enter' key
+            const int VK_ENTER = 0x0D;
+            PressKey(VK_ENTER);
         }
 
         public void Start(IntPtr formHandle)
