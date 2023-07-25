@@ -380,6 +380,7 @@ namespace VerSehen.Core
                 currentState = AnalyzeGame(bitmap);
                 if (currentState.IsGameOver)
                 {
+
                     Thread.Sleep(5000);
                     SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
                     Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
@@ -409,8 +410,8 @@ namespace VerSehen.Core
         }
 
 
-        public void SaveQTable(string filePath)
-        {
+         public void SaveQTable(string filePath)
+         {
             var entries = Q.Select(kvp => new QTableEntry
             {
                 State = kvp.Key,
