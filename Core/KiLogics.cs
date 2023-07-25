@@ -189,11 +189,6 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadPositions[0].X + 1, currentState.SnakeHeadPositions[0].Y))
             {
                 PressKey(VK_RIGHT);
-                currentState.IsMoving = true;
-            }
-            else
-            {
-                currentState.IsMoving = false;
             }
         }
 
@@ -202,11 +197,6 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadPositions[0].X - 1, currentState.SnakeHeadPositions[0].Y))
             {
                 PressKey(VK_LEFT);
-                currentState.IsMoving = true;
-            }
-            else
-            {
-                currentState.IsMoving = false;
             }
         }
 
@@ -215,11 +205,6 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y - 1))
             {
                 PressKey(VK_UP);
-                currentState.IsMoving = true;
-            }
-            else
-            {
-                currentState.IsMoving = false;
             }
         }
 
@@ -228,13 +213,9 @@ namespace VerSehen.Core
             if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y + 1))
             {
                 PressKey(VK_DOWN);
-                currentState.IsMoving = true;
-            }
-            else
-            {
-                currentState.IsMoving = false;
             }
         }
+
 
 
         public bool IsColorInRange(Color color, Color target, int range)
@@ -352,52 +333,37 @@ namespace VerSehen.Core
 
 
 
+
         public void Learn(IntPtr formHandle)
         {
             LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
-
             int counter = 0;
-
-            // Start the game
             StartGame();
-
-            // Wait for the game to start
             Thread.Sleep(3000);
-
             while (true)
             {
                 if (GetForegroundWindow() != formHandle)
                 {
-                    // Wenn das Spiel-Fenster nicht den Fokus hat, brechen Sie die Schleife ab
                     break;
                 }
-
                 Bitmap bitmap = CaptureWindow(formHandle);
-                //ShowBitmap(bitmap);
-                currentState = new State();
-                AnalyzeGame(bitmap);
+                currentState = AnalyzeGame(bitmap);
                 if (currentState.IsGameOver)
                 {
-                    // If the game is over, start it again
                     StartGame();
-
-                    // Wait for the game to start
                     Thread.Sleep(3000);
+                    currentState = AnalyzeGame(bitmap);
                 }
-                currentState = GetState();
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
                 Bitmap newBitmap = CaptureWindow(formHandle);
-                AnalyzeGame(newBitmap);
-                State newState = GetState();
+                State newState = AnalyzeGame(newBitmap);
                 double reward = GetReward(newState);
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
                 Debug.WriteLine($"Reward: {reward}");
                 counter++;
-
-                // Speichern der Q-Tabelle periodisch
                 if (counter >= 100)
                 {
                     SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
@@ -407,6 +373,7 @@ namespace VerSehen.Core
             SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
             Stop();
         }
+
 
         public void SaveQTable(string filePath)
         {
