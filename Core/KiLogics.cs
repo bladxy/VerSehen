@@ -251,10 +251,20 @@ namespace VerSehen.Core
 
         public bool IsColorInRange(Color color, Color target, int range)
         {
-            return Math.Abs(color.R - target.R) <= range &&
-                   Math.Abs(color.G - target.G) <= range &&
-                   Math.Abs(color.B - target.B) <= range;
+            // Print the RGB values of the color and the target color
+            Debug.WriteLine($"Color: R={color.R}, G={color.G}, B={color.B}");
+            Debug.WriteLine($"Target: R={target.R}, G={target.G}, B={target.B}");
+
+            bool isInRange = Math.Abs(color.R - target.R) <= range &&
+                             Math.Abs(color.G - target.G) <= range &&
+                             Math.Abs(color.B - target.B) <= range;
+
+            // Print whether the color is in range of the target color
+            Debug.WriteLine($"Is in range: {isInRange}");
+
+            return isInRange;
         }
+
 
         public void AnalyzeGame(Bitmap bitmap)
         {
