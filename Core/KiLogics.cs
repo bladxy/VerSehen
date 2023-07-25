@@ -128,7 +128,7 @@ namespace VerSehen.Core
             {
                 return -100.0;
             }
-            else if (IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 10)) // 5 ist die Toleranz, die Sie anpassen können
+            else if (IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 15)) // 5 ist die Toleranz, die Sie anpassen können
             {
                 return 100.0;
             }
@@ -410,18 +410,17 @@ namespace VerSehen.Core
 
         public void SaveQTable(string filePath)
         {
-            var qTableCopy = Q.ToDictionary(entry => entry.Key, entry => entry.Value);
-
             using (var writer = new StreamWriter(filePath))
             {
-                foreach (var entry in qTableCopy)
+                foreach (var kvp in Q)
                 {
-                    var stateString = JsonConvert.SerializeObject(entry.Key);
-                    var actionValuesString = JsonConvert.SerializeObject(entry.Value);
-                    writer.WriteLine($"{stateString}: {actionValuesString}");
+                    var stateJson = JsonConvert.SerializeObject(kvp.Key);
+                    var actionValuesJson = JsonConvert.SerializeObject(kvp.Value);
+                    writer.WriteLine($"{stateJson}:{actionValuesJson}");
                 }
             }
         }
+
 
         public void LoadQTable(string filePath)
         {
@@ -435,11 +434,17 @@ namespace VerSehen.Core
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var parts = line.Split(':');
-                    var state = JsonConvert.DeserializeObject<State>(parts[0]);
-                    var actionValues = JsonConvert.DeserializeObject<Dictionary<Action, double>>(parts[1]);
-
-                    Q[state] = actionValues;
+                    try
+                    {
+                        var parts = line.Split(':');
+                        var state = JsonConvert.DeserializeObject<State>(parts[0]);
+                        var actionValues = JsonConvert.DeserializeObject<Dictionary<Action, double>>(parts[1]);
+                        Q[state] = actionValues;
+                    }
+                    catch (JsonReaderException ex)
+                    {
+                        Debug.WriteLine($"Failed to parse line: {line}. Error: {ex.Message}");
+                    }
                 }
             }
         }
