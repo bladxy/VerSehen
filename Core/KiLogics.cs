@@ -272,7 +272,7 @@ namespace VerSehen.Core
                     if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
                         state.ApplePosition = new Point(x, y);
-                        Debug.WriteLine($"Apple detected at ({x}, {y})");
+                        //Debug.WriteLine($"Apple detected at ({x}, {y})");
                     }
                     else if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
@@ -296,17 +296,13 @@ namespace VerSehen.Core
                         if (bodyFound)
                         {
                             state.SnakeHeadPositions.Add(new Point(x, y));
-                            Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                            //Debug.WriteLine($"Snake head detected at ({x}, {y})");
                         }
-                    }
-                    else if (IsColorInRange(pixelColor, bodyColor, bodyRange))
-                    {
-                        state.IsGameOver = false;
                     }
                     else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
                     {
                         state.IsGameOver = true;
-                        Debug.WriteLine("Game over detected");
+                        //Debug.WriteLine("Game over detected");
                     }
 
                 }
@@ -382,13 +378,15 @@ namespace VerSehen.Core
                 }
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
+                Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                 if (currentState.IsGameOver)
                 {
                     Thread.Sleep(10000);
                     StartGame();
-                    Thread.Sleep(10000);
+                    Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
                     currentState = AnalyzeGame(bitmap);
+                    currentState.IsGameOver = false;
                 }
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
