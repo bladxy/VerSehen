@@ -293,8 +293,8 @@ namespace VerSehen.Core
             }
 
             if (currentState.SnakeBody.Contains(new Point(currentState.SnakeHeadX, currentState.SnakeHeadY)) ||
-               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width -1 ||
-               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height -1)
+               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width ||
+               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height)
             {
                 currentState.IsGameOver = true;
             }
