@@ -218,6 +218,13 @@ namespace VerSehen.Core
 
 
 
+        public bool IsColorInRange(Color color, Color target, int range)
+        {
+            return Math.Abs(color.R - target.R) <= range &&
+                   Math.Abs(color.G - target.G) <= range &&
+                   Math.Abs(color.B - target.B) <= range;
+        }
+
         public bool IsColorInAnyRange(Color color, List<(Color target, int range)> colorRanges)
         {
             foreach (var (target, range) in colorRanges)
@@ -236,11 +243,13 @@ namespace VerSehen.Core
             Color bodyColor = Color.FromArgb(255, 128, 255, 128);
             int bodyRange = 0;
             Color eye1Color = Color.FromArgb(255, 242, 242, 242);
-            int eye1Range = 10; // Keine Farbabweichung für eye1
+            int eye1Range = 10;
             Color eye2Color = Color.FromArgb(255, 26, 26, 26);
-            int eye2Range = 10; // Keine Farbabweichung für eye2
+            int eye2Range = 10;
             Color appleColor = Color.FromArgb(255, 255, 102, 102);
             int appleRange = 0;
+            Color deadBodyColor = Color.FromArgb(255, 62, 127, 62);
+            int deadBodyRange = 0;
 
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)> {
         (bodyColor, bodyRange),
@@ -256,7 +265,7 @@ namespace VerSehen.Core
                 {
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    if (IsColorInAnyRange(pixelColor, appleColor, appleRange))
+                    if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
                         state.ApplePosition = new Point(x, y);
                         Debug.WriteLine($"Apple detected at ({x}, {y})");
@@ -266,13 +275,12 @@ namespace VerSehen.Core
                         state.SnakeHeadPositions.Add(new Point(x, y));
                         Debug.WriteLine($"Snake head detected at ({x}, {y})");
                     }
+                    else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
+                    {
+                        state.IsGameOver = true;
+                        Debug.WriteLine("Game over detected");
+                    }
                 }
-            }
-
-            if (state.SnakeHeadPositions.Count == 0)
-            {
-                state.IsGameOver = true;
-                Debug.WriteLine("Game over detected");
             }
 
             return state;
