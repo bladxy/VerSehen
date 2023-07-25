@@ -117,6 +117,10 @@ namespace VerSehen.Core
             return currentState;
         }
 
+        public bool IsNear(Point p1, Point p2, int tolerance)
+        {
+            return Math.Abs(p1.X - p2.X) <= tolerance && Math.Abs(p1.Y - p2.Y) <= tolerance;
+        }
 
         private double GetReward(State state)
         {
@@ -124,7 +128,7 @@ namespace VerSehen.Core
             {
                 return -100.0;
             }
-            else if (state.SnakeHeadPositions.Contains(state.ApplePosition))
+            else if (IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 10)) // 5 ist die Toleranz, die Sie anpassen können
             {
                 return 100.0;
             }
@@ -257,11 +261,10 @@ namespace VerSehen.Core
             int deadBodyRange = 0;
 
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
-    {
-        (eye1Color, eye1Range),
-        (eye2Color, eye2Range)
-    };
-
+               {
+                   (eye1Color, eye1Range),
+                   (eye2Color, eye2Range)
+               };
             State state = new State();
 
             for (int y = 1; y < bitmap.Height - 1; y++)
@@ -275,7 +278,7 @@ namespace VerSehen.Core
                         state.ApplePosition = new Point(x, y);
                         //Debug.WriteLine($"Apple detected at ({x}, {y})");
                     }
-                    else if (IsColorInAnyRange(pixelColor, headColorRanges))
+                    if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         bool bodyFound = false;
                         for (int dy = -1; dy <= 1; dy++)
@@ -297,10 +300,10 @@ namespace VerSehen.Core
                         if (bodyFound)
                         {
                             state.SnakeHeadPositions.Add(new Point(x, y));
-                            Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                            //Debug.WriteLine($"Snake head detected at ({x}, {y})");
                         }
                     }
-                    else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
+                    if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
                     {
                         state.IsGameOver = true;
                         //Debug.WriteLine("Game over detected");
@@ -311,11 +314,6 @@ namespace VerSehen.Core
 
             return state;
         }
-
-
-
-
-
 
         public void ShowBitmap(Bitmap bitmap)
         {
@@ -397,7 +395,7 @@ namespace VerSehen.Core
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
-                //Debug.WriteLine($"Reward: {reward}");
+                Debug.WriteLine($"Reward: {reward}");
                 counter++;
                 if (counter >= 100)
                 {
