@@ -387,7 +387,6 @@ namespace VerSehen.Core
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
                     currentState = AnalyzeGame(bitmap);
-                    currentState.IsGameOver = false;
                 }
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
