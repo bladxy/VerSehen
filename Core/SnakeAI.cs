@@ -114,11 +114,6 @@ namespace VerSehen.Core
             //Debug.WriteLine(($"Reward: {newQValue}"));
         }
 
-        private State GetState()
-        {
-            return currentState;
-        }
-
         public bool IsNear(Point p1, Point p2, int tolerance)
         {
             return Math.Abs(p1.X - p2.X) <= tolerance && Math.Abs(p1.Y - p2.Y) <= tolerance;
@@ -391,7 +386,7 @@ namespace VerSehen.Core
 
                     Thread.Sleep(5000);
                     SaveQTable(filepath);
-                    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
+                    //Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
@@ -405,7 +400,6 @@ namespace VerSehen.Core
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
-                Debug.WriteLine($"Reward: {reward}");
                 counter++;
                 if (counter >= 100)
                 {
