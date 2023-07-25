@@ -109,6 +109,7 @@ namespace VerSehen.Core
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
             Q[oldState][action] = newQValue;
+            Debug.WriteLine(($"Reward: {newQValue}"));
         }
 
         private State GetState()
@@ -296,7 +297,7 @@ namespace VerSehen.Core
                         if (bodyFound)
                         {
                             state.SnakeHeadPositions.Add(new Point(x, y));
-                            //Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                            Debug.WriteLine($"Snake head detected at ({x}, {y})");
                         }
                     }
                     else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
@@ -381,7 +382,7 @@ namespace VerSehen.Core
                 Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                 if (currentState.IsGameOver)
                 {
-                    Thread.Sleep(10000);
+                    Thread.Sleep(5000);
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
@@ -396,7 +397,7 @@ namespace VerSehen.Core
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
-                Debug.WriteLine($"Reward: {reward}");
+                //Debug.WriteLine($"Reward: {reward}");
                 counter++;
                 if (counter >= 100)
                 {
