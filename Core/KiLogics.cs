@@ -220,16 +220,16 @@ namespace VerSehen.Core
 
         public bool IsColorInRange(Color color, Color target, int range)
         {
-            // Print the RGB values of the color and the target color
-            Debug.WriteLine($"Color: R={color.R}, G={color.G}, B={color.B}");
-            Debug.WriteLine($"Target: R={target.R}, G={target.G}, B={target.B}");
+            //// Print the RGB values of the color and the target color
+            //Debug.WriteLine($"Color: R={color.R}, G={color.G}, B={color.B}");
+            //Debug.WriteLine($"Target: R={target.R}, G={target.G}, B={target.B}");
 
             bool isInRange = Math.Abs(color.R - target.R) <= range &&
                              Math.Abs(color.G - target.G) <= range &&
                              Math.Abs(color.B - target.B) <= range;
 
-            // Print whether the color is in range of the target color
-            Debug.WriteLine($"Is in range: {isInRange}");
+            //// Print whether the color is in range of the target color
+            //Debug.WriteLine($"Is in range: {isInRange}");
 
             return isInRange;
         }
@@ -237,58 +237,46 @@ namespace VerSehen.Core
 
         public State AnalyzeGame(Bitmap bitmap)
         {
-            // Define the color ranges for the head of the snake
-            Color bodyColor = ColorTranslator.FromHtml("#80FF80"); // Green
-            int bodyRange = 50; // Adjust this value as needed
+            Color bodyColor = Color.FromArgb(255, 128, 255, 128);
+            int bodyRange = 50;
+            Color whiteColor = ColorTranslator.FromHtml("#F1F1F1");
+            int whiteRange = 50;
+            Color blackColor = ColorTranslator.FromHtml("#1A1A1A");
+            int blackRange = 50;
+            Color appleColor = Color.FromArgb(255, 255, 102, 102);
+            int appleRange = 50;
 
-            Color whiteColor = ColorTranslator.FromHtml("#F1F1F1"); // White
-            int whiteRange = 50; // Adjust this value as needed
-
-            Color blackColor = ColorTranslator.FromHtml("#1A1A1A"); // Black
-            int blackRange = 50; // Adjust this value as needed
-
-            // Define the color for the apple
-            Color appleColor = ColorTranslator.FromHtml("#FF6666"); // Red
-            int appleRange = 50; // Adjust this value as needed
-
-            // Initialize a new state
             State state = new State();
 
-            // Analyze each pixel in the bitmap
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
-                    // Get the color of the pixel
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    // Check if the color of the pixel is within any of the ranges for the head of the snake
-                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) ||
-                        IsColorInRange(pixelColor, whiteColor, whiteRange) ||
-                        IsColorInRange(pixelColor, blackColor, blackRange))
+                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) || IsColorInRange(pixelColor, whiteColor, whiteRange) || IsColorInRange(pixelColor, blackColor, blackRange))
                     {
-                        // The pixel is part of the head of the snake
                         state.SnakeHeadPositions.Add(new Point(x, y));
+                        Debug.WriteLine($"Snake head detected at ({x}, {y})");
                     }
 
-                    // Check if the color of the pixel is within the range for the apple
                     if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
-                        // The pixel is part of the apple
                         state.ApplePosition = new Point(x, y);
+                        Debug.WriteLine($"Apple detected at ({x}, {y})");
                     }
                 }
             }
 
-            // Check if the game is over
             if (state.SnakeHeadPositions.Count == 0)
             {
                 state.IsGameOver = true;
+                Debug.WriteLine("Game over detected");
             }
 
-            // Return the analyzed state
             return state;
         }
+
 
 
         public void ShowBitmap(Bitmap bitmap)
