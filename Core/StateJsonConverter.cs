@@ -28,6 +28,7 @@ namespace VerSehen.Core
             serializer.Serialize(writer, state.ApplePosition);
             writer.WritePropertyName("IsGameOver");
             serializer.Serialize(writer, state.IsGameOver);
+            
             writer.WriteEndObject();
         }
 

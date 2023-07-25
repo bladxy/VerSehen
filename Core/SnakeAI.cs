@@ -111,7 +111,7 @@ namespace VerSehen.Core
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
             Q[oldState][action] = newQValue;
-            Debug.WriteLine(($"Reward: {newQValue}"));
+            //Debug.WriteLine(($"Reward: {newQValue}"));
         }
 
         private State GetState()
@@ -126,19 +126,26 @@ namespace VerSehen.Core
 
         private double GetReward(State state)
         {
+            double reward;
+
             if (state.IsGameOver)
             {
-                return -100.0;
+                reward = -100.0;
             }
-            else if (IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 15)) // 5 ist die Toleranz, die Sie anpassen können
+            else if (state.SnakeHeadPositions.Count > 0 && IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 20)) // 5 ist die Toleranz, die Sie anpassen können
             {
-                return 100.0;
+                reward = 100.0;
             }
             else
             {
-                return -0.1;
+                reward = 0.1;
             }
+
+            Debug.WriteLine($"Reward: {reward}");
+
+            return reward;
         }
+
 
 
         private void PerformAction(Action action)
@@ -209,7 +216,7 @@ namespace VerSehen.Core
 
         public void MoveUp()
         {
-            if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y - 1))
+            if (currentState.SnakeHeadPositions.Count > 0 && CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y - 1))
             {
                 PressKey(VK_UP);
             }
@@ -343,13 +350,13 @@ namespace VerSehen.Core
         {
 
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPositions[0].X + GetXOffset(a), state.SnakeHeadPositions[0].Y + GetYOffset(a)));
 
-            if (actions.Count == 0)
+            if (state.SnakeHeadPositions.Count == 0)
             {
-                // Keine gültige Aktion verfügbar, geben Sie eine Standardaktion zurück oder lösen Sie einen Fehler aus
-                return Action.MoveUp; // oder werfen Sie einen Fehler aus: throw new Exception("Keine gültige Aktion verfügbar");
+                // Keine SnakeHeadPositions verfügbar, geben Sie eine Standardaktion zurück oder lösen Sie einen Fehler aus
+                return Action.MoveUp; // oder werfen Sie einen Fehler aus: throw new Exception("Keine SnakeHeadPositions verfügbar");
             }
+            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPositions[0].X + GetXOffset(a), state.SnakeHeadPositions[0].Y + GetYOffset(a)));
 
             if (random.NextDouble() < epsilon)
             {
