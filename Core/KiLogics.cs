@@ -413,7 +413,7 @@ namespace VerSehen.Core
         {
             var json = JsonConvert.SerializeObject(Q, Formatting.Indented, new JsonSerializerSettings
             {
-                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                Converters = new List<JsonConverter> { new StringEnumConverter(), new StateJsonConverter() },
                 NullValueHandling = NullValueHandling.Ignore
             });
 
@@ -425,8 +425,12 @@ namespace VerSehen.Core
             if (!File.Exists(filePath)) return;
 
             var json = File.ReadAllText(filePath);
-            Q = JsonConvert.DeserializeObject<Dictionary<State, Dictionary<Action, double>>>(json);
+            Q = JsonConvert.DeserializeObject<Dictionary<State, Dictionary<Action, double>>>(json, new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new StateJsonConverter() }
+            });
         }
+
 
         public void StartGame()
         {

@@ -70,8 +70,8 @@ namespace VerSehen.MVVM.ViewModel
             }, o => true);
             StopKiCommand = new RelayCommand(o =>
             {
-                snakeAI.Stop();
                 snakeAI.SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+                snakeAI.Stop();
             });
         }
     }
