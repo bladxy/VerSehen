@@ -378,11 +378,11 @@ namespace VerSehen.Core
                 }
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
-                Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                 if (currentState.IsGameOver)
                 {
                     Thread.Sleep(5000);
                     SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
+                    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
