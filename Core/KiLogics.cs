@@ -218,20 +218,16 @@ namespace VerSehen.Core
 
 
 
-        public bool IsColorInRange(Color color, Color target, int range)
+        public bool IsColorInAnyRange(Color color, List<(Color target, int range)> colorRanges)
         {
-            //// Print the RGB values of the color and the target color
-            //Debug.WriteLine($"Color: R={color.R}, G={color.G}, B={color.B}");
-            //Debug.WriteLine($"Target: R={target.R}, G={target.G}, B={target.B}");
-
-            bool isInRange = Math.Abs(color.R - target.R) <= range &&
-                             Math.Abs(color.G - target.G) <= range &&
-                             Math.Abs(color.B - target.B) <= range;
-
-            //// Print whether the color is in range of the target color
-            //Debug.WriteLine($"Is in range: {isInRange}");
-
-            return isInRange;
+            foreach (var (target, range) in colorRanges)
+            {
+                if (IsColorInRange(color, target, range))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
 
@@ -239,10 +235,18 @@ namespace VerSehen.Core
         {
             Color bodyColor = Color.FromArgb(255, 128, 255, 128);
             int bodyRange = 0;
-            Color headColor = Color.FromArgb(255, 159, 240, 159);
-            int headRange = 50;
+            Color eye1Color = Color.FromArgb(255, 242, 242, 242);
+            int eye1Range = 10; // Keine Farbabweichung für eye1
+            Color eye2Color = Color.FromArgb(255, 26, 26, 26);
+            int eye2Range = 10; // Keine Farbabweichung für eye2
             Color appleColor = Color.FromArgb(255, 255, 102, 102);
             int appleRange = 0;
+
+            List<(Color target, int range)> headColorRanges = new List<(Color target, int range)> {
+        (bodyColor, bodyRange),
+        (eye1Color, eye1Range),
+        (eye2Color, eye2Range)
+    };
 
             State state = new State();
 
@@ -252,18 +256,16 @@ namespace VerSehen.Core
                 {
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    if (IsColorInRange(pixelColor, appleColor, appleRange))
+                    if (IsColorInAnyRange(pixelColor, appleColor, appleRange))
                     {
                         state.ApplePosition = new Point(x, y);
                         Debug.WriteLine($"Apple detected at ({x}, {y})");
                     }
-
-                    if (IsColorInRange(pixelColor, headColor, headRange))
+                    else if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         state.SnakeHeadPositions.Add(new Point(x, y));
                         Debug.WriteLine($"Snake head detected at ({x}, {y})");
                     }
-
                 }
             }
 
