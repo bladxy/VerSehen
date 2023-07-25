@@ -107,5 +107,18 @@
     "Actions": {
       "MoveDown": -0.0015800717992682026
     }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "596, 330",
+        "598, 330"
+      ],
+      "ApplePosition": "182, 336",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -49.9888838048866
+    }
   }
 ]
