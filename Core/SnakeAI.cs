@@ -366,7 +366,7 @@ namespace VerSehen.Core
 
         public void Learn(IntPtr formHandle)
         {
-            LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+            LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
             int counter = 0;
             StartGame();
             Thread.Sleep(3000);
@@ -382,6 +382,7 @@ namespace VerSehen.Core
                 if (currentState.IsGameOver)
                 {
                     Thread.Sleep(5000);
+                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
@@ -400,11 +401,11 @@ namespace VerSehen.Core
                 counter++;
                 if (counter >= 100)
                 {
-                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
                     counter = 0;
                 }
             }
-            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
+            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
             Stop();
         }
 

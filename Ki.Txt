@@ -648,5 +648,130 @@
     "Actions": {
       "MoveUp": -49.993590076628216
     }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "596, 330",
+        "598, 330"
+      ],
+      "ApplePosition": "592, 387",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -49.97176849739581
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "366, 330",
+        "367, 330",
+        "363, 337",
+        "364, 338"
+      ],
+      "ApplePosition": "389, 233",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.029258241483327275
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "411, 246",
+        "411, 247",
+        "403, 249",
+        "404, 250"
+      ],
+      "ApplePosition": "389, 233",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.04725217987099577
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "411, 118",
+        "411, 119",
+        "403, 121"
+      ],
+      "ApplePosition": "389, 233",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.012408358835688228
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "494, 74",
+        "495, 74"
+      ],
+      "ApplePosition": "389, 233",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.008407424402549837
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "366, 330",
+        "367, 330",
+        "363, 337",
+        "364, 338"
+      ],
+      "ApplePosition": "284, 464",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -0.0029178382286036836
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "411, 410",
+        "411, 412"
+      ],
+      "ApplePosition": "284, 464",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.0028458943679781426
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "411, 538",
+        "411, 539",
+        "411, 540"
+      ],
+      "ApplePosition": "284, 464",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -49.95105193773567
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "596, 330",
+        "598, 330"
+      ],
+      "ApplePosition": "466, 412",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -49.95113970477047
+    }
   }
 ]
