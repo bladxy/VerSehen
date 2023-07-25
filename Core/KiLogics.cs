@@ -238,13 +238,11 @@ namespace VerSehen.Core
         public State AnalyzeGame(Bitmap bitmap)
         {
             Color bodyColor = Color.FromArgb(255, 128, 255, 128);
-            int bodyRange = 50;
-            Color whiteColor = ColorTranslator.FromHtml("#F1F1F1");
-            int whiteRange = 50;
-            Color blackColor = ColorTranslator.FromHtml("#1A1A1A");
-            int blackRange = 50;
+            int bodyRange = 0;
+            Color headColor = Color.FromArgb(255, 159, 240, 159);
+            int headRange = 50;
             Color appleColor = Color.FromArgb(255, 255, 102, 102);
-            int appleRange = 50;
+            int appleRange = 0;
 
             State state = new State();
 
@@ -254,17 +252,18 @@ namespace VerSehen.Core
                 {
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) || IsColorInRange(pixelColor, whiteColor, whiteRange) || IsColorInRange(pixelColor, blackColor, blackRange))
-                    {
-                        state.SnakeHeadPositions.Add(new Point(x, y));
-                        Debug.WriteLine($"Snake head detected at ({x}, {y})");
-                    }
-
                     if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
                         state.ApplePosition = new Point(x, y);
                         Debug.WriteLine($"Apple detected at ({x}, {y})");
                     }
+
+                    if (IsColorInRange(pixelColor, headColor, headRange))
+                    {
+                        state.SnakeHeadPositions.Add(new Point(x, y));
+                        Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                    }
+
                 }
             }
 
@@ -276,6 +275,7 @@ namespace VerSehen.Core
 
             return state;
         }
+
 
 
 
