@@ -103,14 +103,11 @@ namespace VerSehen.Core
             }
             if (!Q[oldState].ContainsKey(action))
             {
-                // Initialisierung des Q-Werts auf einen kleinen zufälligen Wert
                 Q[oldState][action] = random.NextDouble() * 0.1;
             }
-
             double oldQValue = Q[oldState][action];
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
-
             Q[oldState][action] = newQValue;
         }
 
@@ -189,7 +186,7 @@ namespace VerSehen.Core
 
         public void MoveRight()
         {
-            if (CanMoveTo(currentState.SnakeHeadX + 1, currentState.SnakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadPositions[0].X + 1, currentState.SnakeHeadPositions[0].Y))
             {
                 PressKey(VK_RIGHT);
                 currentState.IsMoving = true;
@@ -202,7 +199,7 @@ namespace VerSehen.Core
 
         public void MoveLeft()
         {
-            if (CanMoveTo(currentState.SnakeHeadX - 1, currentState.SnakeHeadY))
+            if (CanMoveTo(currentState.SnakeHeadPositions[0].X - 1, currentState.SnakeHeadPositions[0].Y))
             {
                 PressKey(VK_LEFT);
                 currentState.IsMoving = true;
@@ -215,7 +212,7 @@ namespace VerSehen.Core
 
         public void MoveUp()
         {
-            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY - 1))
+            if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y - 1))
             {
                 PressKey(VK_UP);
                 currentState.IsMoving = true;
@@ -228,7 +225,7 @@ namespace VerSehen.Core
 
         public void MoveDown()
         {
-            if (CanMoveTo(currentState.SnakeHeadX, currentState.SnakeHeadY + 1))
+            if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y + 1))
             {
                 PressKey(VK_DOWN);
                 currentState.IsMoving = true;
@@ -238,6 +235,7 @@ namespace VerSehen.Core
                 currentState.IsMoving = false;
             }
         }
+
 
         public bool IsColorInRange(Color color, Color target, int range)
         {
@@ -256,7 +254,7 @@ namespace VerSehen.Core
         }
 
 
-        public void AnalyzeGame(Bitmap bitmap)
+        public State AnalyzeGame(Bitmap bitmap)
         {
             // Define the color ranges for the head of the snake
             Color bodyColor = ColorTranslator.FromHtml("#80FF80"); // Green
@@ -337,25 +335,21 @@ namespace VerSehen.Core
         public Action ChooseAction(State state)
         {
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadX + GetXOffset(a), state.SnakeHeadY + GetYOffset(a)));
-
+            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPositions[0].X + GetXOffset(a), state.SnakeHeadPositions[0].Y + GetYOffset(a)));
             if (actions.Count == 0)
             {
                 return Action.MoveUp;
             }
-
-            // Epsilon-Greedy-Algorithmus
             if (random.NextDouble() < epsilon)
             {
-                // Exploration: Wählen Sie eine zufällige Aktion
                 return actions[random.Next(actions.Count)];
             }
             else
             {
-                // Ausbeutung: Wählen Sie die Aktion mit dem höchsten Q-Wert
                 return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
             }
         }
+
 
 
         public void Learn(IntPtr formHandle)
@@ -380,7 +374,7 @@ namespace VerSehen.Core
 
                 Bitmap bitmap = CaptureWindow(formHandle);
                 //ShowBitmap(bitmap);
-                currentState = new State(0, 0, 0, 0);
+                currentState = new State();
                 AnalyzeGame(bitmap);
                 if (currentState.IsGameOver)
                 {
