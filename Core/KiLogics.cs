@@ -257,16 +257,15 @@ namespace VerSehen.Core
 
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
     {
-        (bodyColor, bodyRange),
         (eye1Color, eye1Range),
         (eye2Color, eye2Range)
     };
 
             State state = new State();
 
-            for (int y = 0; y < bitmap.Height; y++)
+            for (int y = 1; y < bitmap.Height - 1; y++)
             {
-                for (int x = 0; x < bitmap.Width; x++)
+                for (int x = 1; x < bitmap.Width - 1; x++)
                 {
                     Color pixelColor = bitmap.GetPixel(x, y);
 
@@ -277,8 +276,28 @@ namespace VerSehen.Core
                     }
                     else if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
-                        state.SnakeHeadPositions.Add(new Point(x, y));
-                        Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                        bool bodyFound = false;
+                        for (int dy = -1; dy <= 1; dy++)
+                        {
+                            for (int dx = -1; dx <= 1; dx++)
+                            {
+                                Color neighborColor = bitmap.GetPixel(x + dx, y + dy);
+                                if (IsColorInRange(neighborColor, bodyColor, bodyRange))
+                                {
+                                    bodyFound = true;
+                                    break;
+                                }
+                            }
+                            if (bodyFound)
+                            {
+                                break;
+                            }
+                        }
+                        if (bodyFound)
+                        {
+                            state.SnakeHeadPositions.Add(new Point(x, y));
+                            Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                        }
                     }
                     else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
                     {
@@ -290,6 +309,7 @@ namespace VerSehen.Core
 
             return state;
         }
+
 
 
 
