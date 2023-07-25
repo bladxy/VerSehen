@@ -20,6 +20,7 @@ namespace VerSehen.Core
         private Random random = new Random();
         private Dictionary<State, Dictionary<Action, double>> Q = new Dictionary<State, Dictionary<Action, double>>();
         private State currentState;
+        private const string filepath = "C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt";
         private Action currentAction;
         private double alpha = 0.5;
         private double gamma = 0.9;
@@ -366,7 +367,7 @@ namespace VerSehen.Core
 
         public void Learn(IntPtr formHandle)
         {
-            LoadQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
+            LoadQTable(filepath);
             int counter = 0;
             StartGame();
             Thread.Sleep(3000);
@@ -382,7 +383,7 @@ namespace VerSehen.Core
                 {
 
                     Thread.Sleep(5000);
-                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
+                    SaveQTable(filepath);
                     Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                     StartGame();
                     Thread.Sleep(2000);
@@ -401,11 +402,11 @@ namespace VerSehen.Core
                 counter++;
                 if (counter >= 100)
                 {
-                    SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
+                    SaveQTable(filepath);
                     counter = 0;
                 }
             }
-            SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\Ki.Txt");
+            SaveQTable(filepath);
             Stop();
         }
 
