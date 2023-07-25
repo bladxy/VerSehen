@@ -268,51 +268,59 @@ namespace VerSehen.Core
 
         public void AnalyzeGame(Bitmap bitmap)
         {
+            // Define the color ranges for the head of the snake
+            Color bodyColor = ColorTranslator.FromHtml("#80FF80"); // Green
+            int bodyRange = 50; // Adjust this value as needed
 
-            Color bodyColor = ColorTranslator.FromHtml("#80FF80");
-            Color appleColor = ColorTranslator.FromHtml("#FF6666");
-            Color eyeColor1 = ColorTranslator.FromHtml("#F2F2F2");
-            Color eyeColor2 = ColorTranslator.FromHtml("#1A1A1A");
+            Color whiteColor = ColorTranslator.FromHtml("#F1F1F1"); // White
+            int whiteRange = 50; // Adjust this value as needed
 
-            currentState.SnakeBody.Clear();
+            Color blackColor = ColorTranslator.FromHtml("#1A1A1A"); // Black
+            int blackRange = 50; // Adjust this value as needed
 
+            // Define the color for the apple
+            Color appleColor = ColorTranslator.FromHtml("#FF6666"); // Red
+            int appleRange = 50; // Adjust this value as needed
+
+            // Initialize a new state
+            State state = new State();
+
+            // Analyze each pixel in the bitmap
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
+                    // Get the color of the pixel
                     Color pixelColor = bitmap.GetPixel(x, y);
 
-                    if (IsColorInRange(pixelColor, bodyColor, 10))
+                    // Check if the color of the pixel is within any of the ranges for the head of the snake
+                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) ||
+                        IsColorInRange(pixelColor, whiteColor, whiteRange) ||
+                        IsColorInRange(pixelColor, blackColor, blackRange))
                     {
-                        // This pixel is part of the snake body
-                        currentState.SnakeBody.Add(new Point(x, y));
+                        // The pixel is part of the head of the snake
+                        state.SnakeHeadPositions.Add(new Point(x, y));
                     }
-                    else if (IsColorInRange(pixelColor, appleColor, 10))
+
+                    // Check if the color of the pixel is within the range for the apple
+                    if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
-                        // This pixel is part of the apple
-                        currentState.AppleX = x;
-                        currentState.AppleY = y;
-                    }
-                    else if (IsColorInRange(pixelColor, eyeColor1, 10) || IsColorInRange(pixelColor, eyeColor2, 10))
-                    {
-                        // This pixel is part of the snake's eyes
-                        currentState.SnakeHeadX = x;
-                        currentState.SnakeHeadY = y;
+                        // The pixel is part of the apple
+                        state.ApplePosition = new Point(x, y);
                     }
                 }
             }
 
-            if (currentState.SnakeBody.Contains(new Point(currentState.SnakeHeadX, currentState.SnakeHeadY)) ||
-               currentState.SnakeHeadX < 0 || currentState.SnakeHeadX >= bitmap.Width ||
-               currentState.SnakeHeadY < 0 || currentState.SnakeHeadY >= bitmap.Height)
+            // Check if the game is over
+            if (state.SnakeHeadPositions.Count == 0)
             {
-                currentState.IsGameOver = true;
+                state.IsGameOver = true;
             }
-            else
-            {
-                currentState.IsGameOver = false;
-            }
+
+            // Return the analyzed state
+            return state;
         }
+
 
         public void ShowBitmap(Bitmap bitmap)
         {

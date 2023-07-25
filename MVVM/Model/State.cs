@@ -9,22 +9,14 @@ namespace VerSehen.MVVM.Model
 {
     public class State
     {
-        public int SnakeHeadX { get; set; }
-        public int SnakeHeadY { get; set; }
-        public int AppleX { get; set; }
-        public int AppleY { get; set; }
-        public List<Point> SnakeBody { get; set; }
-        public bool IsGameOver { get; set; }
-        public bool HasEatenApple { get; set; }
-        public bool IsMoving { get; set; }
+        // List of positions of the snake's head
+        public List<Point> SnakeHeadPositions { get; set; } = new List<Point>();
 
-        public State(int snakeHeadX, int snakeHeadY, int appleX, int appleY)
-        {
-            SnakeHeadX = snakeHeadX;
-            SnakeHeadY = snakeHeadY;
-            AppleX = appleX;
-            AppleY = appleY;
-            SnakeBody = new List<Point>();  // Initialisierung von SnakeBody
-        }
+        // Position of the apple
+        public Point ApplePosition { get; set; }
+
+        // Whether the game is over
+        public bool IsGameOver { get; set; }
     }
+
 }
