@@ -411,7 +411,13 @@ namespace VerSehen.Core
 
         public void SaveQTable(string filePath)
         {
-            var json = JsonConvert.SerializeObject(Q, Formatting.Indented, new JsonSerializerSettings
+            var entries = Q.Select(kvp => new QTableEntry
+            {
+                State = kvp.Key,
+                Actions = kvp.Value
+            });
+
+            var json = JsonConvert.SerializeObject(entries, Formatting.Indented, new JsonSerializerSettings
             {
                 Converters = new List<JsonConverter> { new StringEnumConverter(), new StateJsonConverter() },
                 NullValueHandling = NullValueHandling.Ignore
@@ -425,11 +431,14 @@ namespace VerSehen.Core
             if (!File.Exists(filePath)) return;
 
             var json = File.ReadAllText(filePath);
-            Q = JsonConvert.DeserializeObject<Dictionary<State, Dictionary<Action, double>>>(json, new JsonSerializerSettings
+            var entries = JsonConvert.DeserializeObject<List<QTableEntry>>(json, new JsonSerializerSettings
             {
                 Converters = new List<JsonConverter> { new StateJsonConverter() }
             });
+
+            Q = entries.ToDictionary(entry => entry.State, entry => entry.Actions);
         }
+
 
 
         public void StartGame()
