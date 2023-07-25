@@ -242,16 +242,21 @@ namespace VerSehen.Core
         {
             Color bodyColor = Color.FromArgb(255, 128, 255, 128);
             int bodyRange = 0;
+
             Color eye1Color = Color.FromArgb(255, 242, 242, 242);
             int eye1Range = 10;
+
             Color eye2Color = Color.FromArgb(255, 26, 26, 26);
             int eye2Range = 10;
+
             Color appleColor = Color.FromArgb(255, 255, 102, 102);
             int appleRange = 0;
+
             Color deadBodyColor = Color.FromArgb(255, 62, 127, 62);
             int deadBodyRange = 0;
 
-            List<(Color target, int range)> headColorRanges = new List<(Color target, int range)> {
+            List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
+    {
         (bodyColor, bodyRange),
         (eye1Color, eye1Range),
         (eye2Color, eye2Range)
@@ -285,6 +290,7 @@ namespace VerSehen.Core
 
             return state;
         }
+
 
 
 
