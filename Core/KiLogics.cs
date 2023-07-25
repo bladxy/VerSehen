@@ -299,11 +299,16 @@ namespace VerSehen.Core
                             Debug.WriteLine($"Snake head detected at ({x}, {y})");
                         }
                     }
+                    else if (IsColorInRange(pixelColor, bodyColor, bodyRange))
+                    {
+                        state.IsGameOver = false;
+                    }
                     else if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
                     {
                         state.IsGameOver = true;
                         Debug.WriteLine("Game over detected");
                     }
+
                 }
             }
 
@@ -339,12 +344,16 @@ namespace VerSehen.Core
 
         public Action ChooseAction(State state)
         {
+
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
             actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPositions[0].X + GetXOffset(a), state.SnakeHeadPositions[0].Y + GetYOffset(a)));
+
             if (actions.Count == 0)
             {
-                return Action.MoveUp;
+                // Keine gültige Aktion verfügbar, geben Sie eine Standardaktion zurück oder lösen Sie einen Fehler aus
+                return Action.MoveUp; // oder werfen Sie einen Fehler aus: throw new Exception("Keine gültige Aktion verfügbar");
             }
+
             if (random.NextDouble() < epsilon)
             {
                 return actions[random.Next(actions.Count)];
@@ -354,6 +363,7 @@ namespace VerSehen.Core
                 return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
             }
         }
+
 
 
 
@@ -374,8 +384,10 @@ namespace VerSehen.Core
                 currentState = AnalyzeGame(bitmap);
                 if (currentState.IsGameOver)
                 {
+                    Thread.Sleep(10000);
                     StartGame();
-                    Thread.Sleep(3000);
+                    Thread.Sleep(10000);
+                    bitmap = CaptureWindow(formHandle);
                     currentState = AnalyzeGame(bitmap);
                 }
                 currentAction = ChooseAction(currentState);
