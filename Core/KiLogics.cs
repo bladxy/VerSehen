@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -410,43 +411,21 @@ namespace VerSehen.Core
 
         public void SaveQTable(string filePath)
         {
-            using (var writer = new StreamWriter(filePath))
+            var json = JsonConvert.SerializeObject(Q, Formatting.Indented, new JsonSerializerSettings
             {
-                foreach (var kvp in Q)
-                {
-                    var stateJson = JsonConvert.SerializeObject(kvp.Key);
-                    var actionValuesJson = JsonConvert.SerializeObject(kvp.Value);
-                    writer.WriteLine($"{stateJson}:{actionValuesJson}");
-                }
-            }
-        }
+                Converters = new List<JsonConverter> { new StringEnumConverter() },
+                NullValueHandling = NullValueHandling.Ignore
+            });
 
+            File.WriteAllText(filePath, json);
+        }
 
         public void LoadQTable(string filePath)
         {
-            if (!File.Exists(filePath))
-            {
-                return;
-            }
+            if (!File.Exists(filePath)) return;
 
-            using (var reader = new StreamReader(filePath))
-            {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    try
-                    {
-                        var parts = line.Split(':');
-                        var state = JsonConvert.DeserializeObject<State>(parts[0]);
-                        var actionValues = JsonConvert.DeserializeObject<Dictionary<Action, double>>(parts[1]);
-                        Q[state] = actionValues;
-                    }
-                    catch (JsonReaderException ex)
-                    {
-                        Debug.WriteLine($"Failed to parse line: {line}. Error: {ex.Message}");
-                    }
-                }
-            }
+            var json = File.ReadAllText(filePath);
+            Q = JsonConvert.DeserializeObject<Dictionary<State, Dictionary<Action, double>>>(json);
         }
 
         public void StartGame()
