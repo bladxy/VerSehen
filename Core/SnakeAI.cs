@@ -319,6 +319,11 @@ namespace VerSehen.Core
                         applePixelCount++;
                     }
 
+                    if (IsColorInRange(pixelColor, bodyColor, bodyRange))
+                    {
+                        state.SnakeBodyPoints.Add(new Point(x, y));
+                    }
+
                     if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         bool bodyFound = false;
