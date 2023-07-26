@@ -168,5 +168,105 @@
     "Actions": {
       "MoveUp": 50.03847771855705
     }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "386, 375",
+      "ApplePosition": "617, 200",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4847798974105517
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "540, 272",
+      "ApplePosition": "386, 123",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -0.4595485948987436
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "356, 123",
+      "ApplePosition": "540, 149",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4778982647133364
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "540, 195",
+      "ApplePosition": "540, 149",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -0.47851971565105983
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "279, 225",
+      "ApplePosition": "617, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -0.46696148030720186
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "340, 482",
+      "ApplePosition": "617, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4653873734427512
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "570, 380",
+      "ApplePosition": "617, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -0.49244080910423105
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "539, 385",
+      "ApplePosition": "617, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.4572681365832406
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "591, 169",
+      "ApplePosition": "386, 482",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.4839557159064538
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "540, 359",
+      "ApplePosition": "386, 482",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": -0.4633638078265198
+    }
   }
 ]

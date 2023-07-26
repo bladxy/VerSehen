@@ -17,6 +17,8 @@ namespace VerSehen.MVVM.Model
 
         // Whether the game is over
         public bool IsGameOver { get; set; }
+
+        public List<Point> SnakeBodyPoints = new List<Point>();
     }
 
 }

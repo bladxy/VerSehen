@@ -255,6 +255,12 @@ namespace VerSehen.Core
 
                 // Draw a circle around the snake's head
                 g.DrawEllipse(Pens.Green, state.SnakeHeadPosition.X - 5, state.SnakeHeadPosition.Y - 5, 10, 10);
+
+                foreach (Point bodyPoint in state.SnakeBodyPositions)
+                {
+                    // Draw a circle around the body point
+                    g.DrawEllipse(Pens.Blue, bodyPoint.X - 5, bodyPoint.Y - 5, 10, 10);
+                }
             }
 
             // Save the labeled image to a file
@@ -309,6 +315,37 @@ namespace VerSehen.Core
                         totalAppleX += x;
                         totalAppleY += y;
                         applePixelCount++;
+                    }
+
+                    if (IsColorInRange(pixelColor, bodyColor, bodyRange))
+                    {
+                        // Check if the surrounding pixels also have the body color
+                        bool isSquare = true;
+                        for (int dy = -1; dy <= 1; dy++)
+                        {
+                            for (int dx = -1; dx <= 1; dx++)
+                            {
+                                if (x + dx >= 0 && x + dx < bitmap.Width && y + dy >= 0 && y + dy < bitmap.Height)
+                                {
+                                    Color neighborColor = bitmap.GetPixel(x + dx, y + dy);
+                                    if (!IsColorInRange(neighborColor, bodyColor, bodyRange))
+                                    {
+                                        isSquare = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!isSquare)
+                            {
+                                break;
+                            }
+                        }
+
+                        // If all surrounding pixels have the body color, add the center of the square to the list
+                        if (isSquare)
+                        {
+                            state.SnakeBodyPoints.Add(new Point(x, y));
+                        }
                     }
 
                     if (IsColorInAnyRange(pixelColor, headColorRanges))
