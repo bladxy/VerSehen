@@ -22,8 +22,8 @@ namespace VerSehen.Core
             // Hier definieren Sie, wie das State-Objekt in einen JSON-String serialisiert wird.
             // Zum Beispiel könnten Sie alle Eigenschaften des State-Objekts in einem JSON-Objekt speichern.
             writer.WriteStartObject();
-            writer.WritePropertyName("SnakeHeadPositions");
-            serializer.Serialize(writer, state.SnakeHeadPositions);
+            writer.WritePropertyName("SnakeHeadPosition");
+            serializer.Serialize(writer, state.SnakeHeadPosition);
             writer.WritePropertyName("ApplePosition");
             serializer.Serialize(writer, state.ApplePosition);
             writer.WritePropertyName("IsGameOver");
@@ -38,7 +38,7 @@ namespace VerSehen.Core
             // Hier definieren Sie, wie das State-Objekt aus dem JSON-String deserialisiert wird.
             // Sie würden die Werte aus dem JSON-Objekt extrahieren und verwenden, um ein neues State-Objekt zu erstellen.
             var state = new State();
-            state.SnakeHeadPositions = jsonObject["SnakeHeadPositions"].ToObject<List<System.Drawing.Point>>(serializer);
+            state.SnakeHeadPosition = jsonObject["SnakeHeadPosition"].ToObject<System.Drawing.Point>(serializer);
             state.ApplePosition = jsonObject["ApplePosition"].ToObject<System.Drawing.Point>(serializer);
             state.IsGameOver = jsonObject["IsGameOver"].ToObject<bool>(serializer);
             return state;

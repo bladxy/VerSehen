@@ -60,7 +60,7 @@ namespace VerSehen.Core
 
         public bool CanMoveTo(int x, int y)
         {
-            if (currentState.SnakeHeadPositions.Contains(new Point(x, y)))
+            if (currentState.SnakeHeadPosition == new Point(x, y))
             {
                 return false;
             }
@@ -119,26 +119,20 @@ namespace VerSehen.Core
             return Math.Abs(p1.X - p2.X) <= tolerance && Math.Abs(p1.Y - p2.Y) <= tolerance;
         }
 
-        private double GetReward(State state)
+        public double GetReward(State oldState, State newState, Action action)
         {
-            double reward;
-
-            if (state.IsGameOver)
+            if (newState.IsGameOver)
             {
-                reward = -100.0;
+                return -100;
             }
-            else if (state.SnakeHeadPositions.Count > 0 && IsNear(state.SnakeHeadPositions[0], state.ApplePosition, 20)) // 5 ist die Toleranz, die Sie anpassen können
+            else if (newState.SnakeHeadPosition == oldState.ApplePosition)
             {
-                reward = 100.0;
+                return 100;
             }
             else
             {
-                reward = 0.1;
+                return -1;
             }
-
-            Debug.WriteLine($"Reward: {reward}");
-
-            return reward;
         }
 
 
@@ -195,7 +189,7 @@ namespace VerSehen.Core
 
         public void MoveRight()
         {
-            if (CanMoveTo(currentState.SnakeHeadPositions[0].X + 1, currentState.SnakeHeadPositions[0].Y))
+            if (CanMoveTo(currentState.SnakeHeadPosition.X + 1, currentState.SnakeHeadPosition.Y))
             {
                 PressKey(VK_RIGHT);
             }
@@ -203,7 +197,7 @@ namespace VerSehen.Core
 
         public void MoveLeft()
         {
-            if (CanMoveTo(currentState.SnakeHeadPositions[0].X - 1, currentState.SnakeHeadPositions[0].Y))
+            if (CanMoveTo(currentState.SnakeHeadPosition.X - 1, currentState.SnakeHeadPosition.Y))
             {
                 PressKey(VK_LEFT);
             }
@@ -211,7 +205,7 @@ namespace VerSehen.Core
 
         public void MoveUp()
         {
-            if (currentState.SnakeHeadPositions.Count > 0 && CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y - 1))
+            if (CanMoveTo(currentState.SnakeHeadPosition.X, currentState.SnakeHeadPosition.Y - 1))
             {
                 PressKey(VK_UP);
             }
@@ -219,7 +213,7 @@ namespace VerSehen.Core
 
         public void MoveDown()
         {
-            if (CanMoveTo(currentState.SnakeHeadPositions[0].X, currentState.SnakeHeadPositions[0].Y + 1))
+            if (CanMoveTo(currentState.SnakeHeadPosition.X, currentState.SnakeHeadPosition.Y + 1))
             {
                 PressKey(VK_DOWN);
             }
@@ -253,19 +247,13 @@ namespace VerSehen.Core
 
             // Create a new image that includes the labels
             Bitmap labeledImage = new Bitmap(bitmap.Width, bitmap.Height);
-            using (Graphics g = Graphics.FromImage(labeledImage))
+            // Draw a circle around the apple
+            using (Graphics g = Graphics.FromImage(bitmap))
             {
-                // Draw the original image
-                g.DrawImage(bitmap, 0, 0);
+                g.DrawEllipse(Pens.Red, state.ApplePosition.X - 5, state.ApplePosition.Y - 5, 10, 10);
 
-                // Draw a red circle around the apple
-                g.DrawEllipse(Pens.Red, new Rectangle(state.ApplePosition.X - 5, state.ApplePosition.Y - 5, 10, 10));
-
-                // Draw a green circle around the snake's head
-                foreach (Point p in state.SnakeHeadPositions)
-                {
-                    g.DrawEllipse(Pens.Green, new Rectangle(p.X - 5, p.Y - 5, 10, 10));
-                }
+                // Draw a circle around the snake's head
+                g.DrawEllipse(Pens.Green, state.SnakeHeadPosition.X - 5, state.SnakeHeadPosition.Y - 5, 10, 10);
             }
 
             // Save the labeled image to a file
@@ -380,16 +368,12 @@ namespace VerSehen.Core
 
         public Action ChooseAction(State state)
         {
-
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-
-            if (state.SnakeHeadPositions.Count == 0)
+            if (state.SnakeHeadPosition == null)
             {
-                // Keine SnakeHeadPositions verfügbar, geben Sie eine Standardaktion zurück oder lösen Sie einen Fehler aus
-                return Action.MoveUp; // oder werfen Sie einen Fehler aus: throw new Exception("Keine SnakeHeadPositions verfügbar");
+                return Action.MoveUp;
             }
-            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPositions[0].X + GetXOffset(a), state.SnakeHeadPositions[0].Y + GetYOffset(a)));
-
+            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPosition.X + GetXOffset(a), state.SnakeHeadPosition.Y + GetYOffset(a)));
             if (random.NextDouble() < epsilon)
             {
                 return actions[random.Next(actions.Count)];
@@ -399,10 +383,6 @@ namespace VerSehen.Core
                 return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
             }
         }
-
-
-
-
 
         public void Learn(IntPtr formHandle)
         {
