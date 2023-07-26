@@ -325,6 +325,11 @@ namespace VerSehen.Core
                             {
                                 break;
                             }
+                            if (bodyFound)
+                            {
+                                state.SnakeHeadPosition = new Point(x, y);
+                                //Debug.WriteLine($"Snake head detected at ({x}, {y})");
+                            }
                         }
 
                         if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
