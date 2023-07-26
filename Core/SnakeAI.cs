@@ -246,6 +246,34 @@ namespace VerSehen.Core
             return false;
         }
 
+        public void AnalyzeGameAndSaveImage(Bitmap bitmap)
+        {
+            // Analyze the game as usual
+            State state = AnalyzeGame(bitmap);
+
+            // Create a new image that includes the labels
+            Bitmap labeledImage = new Bitmap(bitmap.Width, bitmap.Height);
+            using (Graphics g = Graphics.FromImage(labeledImage))
+            {
+                // Draw the original image
+                g.DrawImage(bitmap, 0, 0);
+
+                // Draw a red circle around the apple
+                g.DrawEllipse(Pens.Red, new Rectangle(state.ApplePosition.X - 5, state.ApplePosition.Y - 5, 10, 10));
+
+                // Draw a green circle around the snake's head
+                foreach (Point p in state.SnakeHeadPositions)
+                {
+                    g.DrawEllipse(Pens.Green, new Rectangle(p.X - 5, p.Y - 5, 10, 10));
+                }
+            }
+
+            // Save the labeled image to a file
+            string filepath = @"C:\Users\jaeger04\Desktop\SnakeKi\VerSehen\SnakeBibliotek";
+            string filename = Path.Combine(filepath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
+            labeledImage.Save(filename, ImageFormat.Png);
+        }
+
 
         public State AnalyzeGame(Bitmap bitmap)
         {
@@ -381,6 +409,7 @@ namespace VerSehen.Core
                 }
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
+                AnalyzeGameAndSaveImage(bitmap);
                 if (currentState.IsGameOver)
                 {
 
@@ -390,6 +419,7 @@ namespace VerSehen.Core
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
+                    AnalyzeGameAndSaveImage(bitmap);
                     currentState = AnalyzeGame(bitmap);
                 }
                 currentAction = ChooseAction(currentState);
