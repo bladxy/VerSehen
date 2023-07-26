@@ -441,11 +441,9 @@ namespace VerSehen.Core
         public Action ChooseAction(State state)
         {
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
-            if (state.SnakeHeadPosition == null)
-            {
-                return Action.MoveUp;
-            }
+
             actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPosition.X + GetXOffset(a), state.SnakeHeadPosition.Y + GetYOffset(a)));
+
             if (random.NextDouble() < epsilon)
             {
                 return actions[random.Next(actions.Count)];
