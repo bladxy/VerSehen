@@ -321,42 +321,6 @@ namespace VerSehen.Core
                         applePixelCount++;
                     }
 
-                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) && !visited[x, y])
-                    {
-                        List<Point> bodyPartPixels = new List<Point>();
-                        Queue<Point> queue = new Queue<Point>();
-                        queue.Enqueue(new Point(x, y));
-
-                        while (queue.Count > 0)
-                        {
-                            Point point = queue.Dequeue();
-                            if (point.X < 0 || point.X >= bitmap.Width || point.Y < 0 || point.Y >= bitmap.Height)
-                            {
-                                continue;
-                            }
-                            if (visited[point.X, point.Y])
-                            {
-                                continue;
-                            }
-                            visited[point.X, point.Y] = true;
-
-                            Color pointColor = bitmap.GetPixel(point.X, point.Y);
-                            if (IsColorInRange(pointColor, bodyColor, bodyRange))
-                            {
-                                bodyPartPixels.Add(point);
-                                queue.Enqueue(new Point(point.X - 1, point.Y));
-                                queue.Enqueue(new Point(point.X + 1, point.Y));
-                                queue.Enqueue(new Point(point.X, point.Y - 1));
-                                queue.Enqueue(new Point(point.X, point.Y + 1));
-                            }
-                        }
-
-                        int bodyPartCenterX = bodyPartPixels.Sum(p => p.X) / bodyPartPixels.Count;
-                        int bodyPartCenterY = bodyPartPixels.Sum(p => p.Y) / bodyPartPixels.Count;
-                        state.SnakeBodyPoints.Add(new Point(bodyPartCenterX, bodyPartCenterY));
-                    }
-
-
                     if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         bool bodyFound = false;
@@ -391,6 +355,41 @@ namespace VerSehen.Core
                             totalSnakeHeadY += y;
                             snakeHeadPixelCount++;
                         }
+                    }
+
+                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) && !visited[x, y])
+                    {
+                        List<Point> bodyPartPixels = new List<Point>();
+                        Queue<Point> queue = new Queue<Point>();
+                        queue.Enqueue(new Point(x, y));
+
+                        while (queue.Count > 0)
+                        {
+                            Point point = queue.Dequeue();
+                            if (point.X < 0 || point.X >= bitmap.Width || point.Y < 0 || point.Y >= bitmap.Height)
+                            {
+                                continue;
+                            }
+                            if (visited[point.X, point.Y])
+                            {
+                                continue;
+                            }
+                            visited[point.X, point.Y] = true;
+
+                            Color pointColor = bitmap.GetPixel(point.X, point.Y);
+                            if (IsColorInRange(pointColor, bodyColor, bodyRange))
+                            {
+                                bodyPartPixels.Add(point);
+                                queue.Enqueue(new Point(point.X - 1, point.Y));
+                                queue.Enqueue(new Point(point.X + 1, point.Y));
+                                queue.Enqueue(new Point(point.X, point.Y - 1));
+                                queue.Enqueue(new Point(point.X, point.Y + 1));
+                            }
+                        }
+
+                        int bodyPartCenterX = bodyPartPixels.Sum(p => p.X) / bodyPartPixels.Count;
+                        int bodyPartCenterY = bodyPartPixels.Sum(p => p.Y) / bodyPartPixels.Count;
+                        state.SnakeBodyPoints.Add(new Point(bodyPartCenterX, bodyPartCenterY));
                     }
 
                     if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
