@@ -319,48 +319,6 @@ namespace VerSehen.Core
                         applePixelCount++;
                     }
 
-                    if (IsColorInRange(pixelColor, gridColor, gridRange))
-                    {
-                        // Check the color of the pixels inside the square
-                        bool isSquare = true;
-                        int totalX = 0;
-                        int totalY = 0;
-                        int count = 0;
-
-                        for (int dy = -1; dy <= 1; dy++)
-                        {
-                            for (int dx = -1; dx <= 1; dx++)
-                            {
-                                if (x + dx >= 0 && x + dx < bitmap.Width && y + dy >= 0 && y + dy < bitmap.Height)
-                                {
-                                    Color neighborColor = bitmap.GetPixel(x + dx, y + dy);
-                                    if (IsColorInRange(neighborColor, bodyColor, bodyRange))
-                                    {
-                                        totalX += x + dx;
-                                        totalY += y + dy;
-                                        count++;
-                                    }
-                                    else
-                                    {
-                                        isSquare = false;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!isSquare)
-                            {
-                                break;
-                            }
-                        }
-
-                        // If all pixels inside the square have the body color, add the center of the square to the list
-                        if (isSquare)
-                        {
-                            state.SnakeBodyPoints.Add(new Point(totalX / count, totalY / count));
-                        }
-                    }
-
                     if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         bool bodyFound = false;
