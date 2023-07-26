@@ -357,6 +357,11 @@ namespace VerSehen.Core
                         }
                     }
 
+                    if (snakeHeadPixelCount > 0)
+                    {
+                        state.SnakeHeadPosition = new Point(totalSnakeHeadX / snakeHeadPixelCount, totalSnakeHeadY / snakeHeadPixelCount);
+                    }
+
                     if (IsColorInRange(pixelColor, bodyColor, bodyRange) && !visited[x, y])
                     {
                         List<Point> bodyPartPixels = new List<Point>();
@@ -389,7 +394,8 @@ namespace VerSehen.Core
 
                         int bodyPartCenterX = bodyPartPixels.Sum(p => p.X) / bodyPartPixels.Count;
                         int bodyPartCenterY = bodyPartPixels.Sum(p => p.Y) / bodyPartPixels.Count;
-                        state.SnakeBodyPoints.Add(new Point(bodyPartCenterX, bodyPartCenterY));
+                        Point bodyPartCenter = new Point(bodyPartCenterX, bodyPartCenterY);
+                        state.SnakeBodyPoints.Add(bodyPartCenter);
                     }
 
                     if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
@@ -399,15 +405,13 @@ namespace VerSehen.Core
                 }
             }
 
-            if (snakeHeadPixelCount > 0)
-            {
-                state.SnakeHeadPosition = new Point(totalSnakeHeadX / snakeHeadPixelCount, totalSnakeHeadY / snakeHeadPixelCount);
-            }
-
             if (applePixelCount > 0)
             {
                 state.ApplePosition = new Point(totalAppleX / applePixelCount, totalAppleY / applePixelCount);
             }
+
+            // Exclude the head position from the body points
+            state.SnakeBodyPoints = state.SnakeBodyPoints.Where(p => Math.Sqrt(Math.Pow(p.X - state.SnakeHeadPosition.X, 2) + Math.Pow(p.Y - state.SnakeHeadPosition.Y, 2)) > 20).ToList();
 
             return state;
         }
