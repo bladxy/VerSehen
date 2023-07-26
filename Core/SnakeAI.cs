@@ -292,6 +292,10 @@ namespace VerSehen.Core
             Color deadBodyColor = Color.FromArgb(255, 62, 127, 62);
             int deadBodyRange = 0;
 
+            int totalAppleX = 0;
+            int totalAppleY = 0;
+            int applePixelCount = 0;
+
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
                {
                    (eye1Color, eye1Range),
@@ -307,9 +311,12 @@ namespace VerSehen.Core
 
                     if (IsColorInRange(pixelColor, appleColor, appleRange))
                     {
-                        state.ApplePosition = new Point(x, y);
-                        //Debug.WriteLine($"Apple detected at ({x}, {y})");
+                        // Add the x and y coordinates to the total and increment the count
+                        totalAppleX += x;
+                        totalAppleY += y;
+                        applePixelCount++;
                     }
+
                     if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
                         bool bodyFound = false;
@@ -342,6 +349,11 @@ namespace VerSehen.Core
                     }
 
                 }
+            }
+
+            if (applePixelCount > 0)
+            {
+                state.ApplePosition = new Point(totalAppleX / applePixelCount, totalAppleY / applePixelCount);
             }
 
             return state;

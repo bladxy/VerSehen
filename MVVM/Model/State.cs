@@ -10,7 +10,7 @@ namespace VerSehen.MVVM.Model
     public class State
     {
         // List of positions of the snake's head
-        public List<Point> SnakeHeadPositions { get; set; } = new List<Point>();
+        public Point SnakeHeadPosition { get; set; }
 
         // Position of the apple
         public Point ApplePosition { get; set; }

@@ -7791,5 +7791,96 @@
     "Actions": {
       "MoveUp": -49.96781464461286
     }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "596, 330",
+        "598, 330"
+      ],
+      "ApplePosition": "489, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -49.966277240501924
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "366, 330",
+        "367, 330",
+        "363, 337",
+        "364, 338"
+      ],
+      "ApplePosition": "591, 379",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": 0.056691169197280636
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [],
+      "ApplePosition": "591, 379",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": 0.08734454872705832
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [],
+      "ApplePosition": "591, 379",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -49.96260985244579
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "366, 330",
+        "367, 330",
+        "363, 337",
+        "364, 338"
+      ],
+      "ApplePosition": "233, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveLeft": 0.05181962886575043
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "545, 330",
+        "547, 330"
+      ],
+      "ApplePosition": "233, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": 0.05796325830064136
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPositions": [
+        "616, 246",
+        "616, 247",
+        "608, 249",
+        "615, 249"
+      ],
+      "ApplePosition": "233, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": 0.08089809940016002
+    }
   }
 ]
