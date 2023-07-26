@@ -285,11 +285,6 @@ namespace VerSehen.Core
             int totalAppleY = 0;
             int applePixelCount = 0;
 
-            // Initialize variables to hold the total x and y coordinates of the snake head pixels, and the count of snake head pixels
-            int totalSnakeHeadX = 0;
-            int totalSnakeHeadY = 0;
-            int snakeHeadPixelCount = 0;
-
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
                {
                    (eye1Color, eye1Range),
@@ -297,6 +292,7 @@ namespace VerSehen.Core
                };
             State state = new State();
 
+            // Loop over all pixels in the image
             for (int y = 1; y < bitmap.Height - 1; y++)
             {
                 for (int x = 1; x < bitmap.Width - 1; x++)
@@ -311,32 +307,36 @@ namespace VerSehen.Core
                         applePixelCount++;
                     }
 
-                    // Check if the pixel color is within the color range for any part of the snake's head
-                    if (IsColorInRange(pixelColor, bodyColor, bodyRange) ||
-                        IsColorInRange(pixelColor, eye1Color, eye1Range) ||
-                        IsColorInRange(pixelColor, eye2Color, eye2Range))
+                    if (IsColorInAnyRange(pixelColor, headColorRanges))
                     {
-                        // Add the x and y coordinates to the total and increment the count
-                        totalSnakeHeadX += x;
-                        totalSnakeHeadY += y;
-                        snakeHeadPixelCount++;
-                    }
+                        bool bodyFound = false;
+                        for (int dy = -1; dy <= 1; dy++)
+                        {
+                            for (int dx = -1; dx <= 1; dx++)
+                            {
+                                Color neighborColor = bitmap.GetPixel(x + dx, y + dy);
+                                if (IsColorInRange(neighborColor, bodyColor, bodyRange))
+                                {
+                                    bodyFound = true;
+                                    break;
+                                }
+                            }
+                            if (bodyFound)
+                            {
+                                break;
+                            }
+                        }
 
-                    if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
-                    {
-                        state.IsGameOver = true;
-                        //Debug.WriteLine("Game over detected");
-                    }
+                        if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
+                        {
+                            state.IsGameOver = true;
+                            //Debug.WriteLine("Game over detected");
+                        }
 
+                    }
                 }
             }
-
-            // Calculate the average x and y coordinates of the snake head pixels
-            if (snakeHeadPixelCount > 0)
-            {
-                state.SnakeHeadPosition = new Point(totalSnakeHeadX / snakeHeadPixelCount, totalSnakeHeadY / snakeHeadPixelCount);
-            }
-
+       
             if (applePixelCount > 0)
             {
                 state.ApplePosition = new Point(totalAppleX / applePixelCount, totalAppleY / applePixelCount);
