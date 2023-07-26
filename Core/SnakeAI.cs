@@ -269,60 +269,6 @@ namespace VerSehen.Core
             labeledImage.Save(filename, ImageFormat.Png);
         }
 
-        public List<Point> GetGrid(Bitmap bitmap)
-        {
-            // Define the grid color
-            Color gridColor = Color.FromArgb(255, 79, 72, 103);
-            int gridRange = 0;  // Adjust this value as needed
-
-            // Find the horizontal and vertical grid lines
-            List<Point> gridPixels = new List<Point>();
-
-            for (int y = 1; y < bitmap.Height - 1; y++)
-            {
-                for (int x = 1; x < bitmap.Width - 1; x++)
-                {
-                    Color pixelColor = bitmap.GetPixel(x, y);
-
-                    if (pixelColor == gridColor)
-                    {
-                        gridPixels.Add(new Point(x, y));
-                    }
-                }
-            }
-            gridPixels.Sort(delegate(Point p1, Point p2) {  return p1.X - p2.X; });
-            return gridPixels;
-        }
-
-        public List<Rectangle> FindSquares(List<Point> gridPoints)
-        {
-            List<Rectangle> squares = new List<Rectangle>();
-
-            foreach (Point point in gridPoints)
-            {
-                // Find the points that are to the right and below the current point
-                Point? rightPoint = gridPoints.FirstOrDefault(p => p.Y == point.Y && p.X > point.X);
-                Point? belowPoint = gridPoints.FirstOrDefault(p => p.X == point.X && p.Y > point.Y);
-
-                if (rightPoint.HasValue && belowPoint.HasValue)
-                {
-                    // Find the point that is below the right point and to the right of the below point
-                    Point? cornerPoint = gridPoints.FirstOrDefault(p => p.X == rightPoint.Value.X && p.Y == belowPoint.Value.Y);
-
-                    if (cornerPoint.HasValue)
-                    {
-                        // Create a rectangle from the four points
-                        Rectangle square = new Rectangle(point.X, point.Y, rightPoint.Value.X - point.X, belowPoint.Value.Y - point.Y);
-                        squares.Add(square);
-                    }
-                }
-            }
-
-            return squares;
-        }
-
-
-
         public State AnalyzeGame(Bitmap bitmap)
         {
             Color bodyColor = Color.FromArgb(255, 128, 255, 128);
@@ -350,9 +296,6 @@ namespace VerSehen.Core
             int totalSnakeHeadX = 0;
             int totalSnakeHeadY = 0;
             int snakeHeadPixelCount = 0;
-
-            var GridPoints = GetGrid(bitmap);
-            var GridField = FindSquares(GridPoints);
 
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
                {
