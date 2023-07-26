@@ -346,6 +346,11 @@ namespace VerSehen.Core
                             snakeHeadPixelCount++;
                         }
                     }
+
+                    if (IsColorInRange(pixelColor, deadBodyColor, deadBodyRange))
+                    {
+                        state.IsGameOver = true;
+                    }
                 }
             }
 
@@ -422,7 +427,7 @@ namespace VerSehen.Core
 
                     Thread.Sleep(5000);
                     SaveQTable(filepath);
-                    //Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
+                    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
