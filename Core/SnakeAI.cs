@@ -246,9 +246,10 @@ namespace VerSehen.Core
             State state = AnalyzeGame(bitmap);
 
             // Create a new image that includes the labels
-            Bitmap labeledImage = new Bitmap(bitmap.Width, bitmap.Height);
+            Bitmap labeledImage = new Bitmap(bitmap);
+
             // Draw a circle around the apple
-            using (Graphics g = Graphics.FromImage(bitmap))
+            using (Graphics g = Graphics.FromImage(labeledImage))
             {
                 g.DrawEllipse(Pens.Red, state.ApplePosition.X - 5, state.ApplePosition.Y - 5, 10, 10);
 
@@ -415,7 +416,7 @@ namespace VerSehen.Core
                 PerformAction(currentAction);
                 Bitmap newBitmap = CaptureWindow(formHandle);
                 State newState = AnalyzeGame(newBitmap);
-                double reward = GetReward(newState);
+                double reward = GetReward(currentState, newState, currentAction);
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
