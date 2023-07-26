@@ -256,7 +256,7 @@ namespace VerSehen.Core
                 // Draw a circle around the snake's head
                 g.DrawEllipse(Pens.Green, state.SnakeHeadPosition.X - 5, state.SnakeHeadPosition.Y - 5, 10, 10);
 
-                foreach (Point bodyPoint in state.SnakeBodyPositions)
+                foreach (Point bodyPoint in state.SnakeBodyPoints)
                 {
                     // Draw a circle around the body point
                     g.DrawEllipse(Pens.Blue, bodyPoint.X - 5, bodyPoint.Y - 5, 10, 10);
@@ -268,6 +268,59 @@ namespace VerSehen.Core
             string filename = Path.Combine(filepath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
             labeledImage.Save(filename, ImageFormat.Png);
         }
+
+        public List<Point> GetGrid(Bitmap bitmap)
+        {
+            // Define the grid color
+            Color gridColor = Color.FromArgb(255, 79, 72, 103);
+            int gridRange = 0;  // Adjust this value as needed
+
+            // Find the horizontal and vertical grid lines
+            List<Point> gridPixels = new List<Point>();
+
+            for (int y = 1; y < bitmap.Height - 1; y++)
+            {
+                for (int x = 1; x < bitmap.Width - 1; x++)
+                {
+                    Color pixelColor = bitmap.GetPixel(x, y);
+
+                    if (pixelColor == gridColor)
+                    {
+                        gridPixels.Add(new Point(x, y));
+                    }
+                }
+            }
+            gridPixels.Sort(delegate(Point p1, Point p2) {  return p1.X - p2.X; });
+            return gridPixels;
+        }
+
+        public List<Rectangle> FindSquares(List<Point> gridPoints)
+        {
+            List<Rectangle> squares = new List<Rectangle>();
+
+            foreach (Point point in gridPoints)
+            {
+                // Find the points that are to the right and below the current point
+                Point? rightPoint = gridPoints.FirstOrDefault(p => p.Y == point.Y && p.X > point.X);
+                Point? belowPoint = gridPoints.FirstOrDefault(p => p.X == point.X && p.Y > point.Y);
+
+                if (rightPoint.HasValue && belowPoint.HasValue)
+                {
+                    // Find the point that is below the right point and to the right of the below point
+                    Point? cornerPoint = gridPoints.FirstOrDefault(p => p.X == rightPoint.Value.X && p.Y == belowPoint.Value.Y);
+
+                    if (cornerPoint.HasValue)
+                    {
+                        // Create a rectangle from the four points
+                        Rectangle square = new Rectangle(point.X, point.Y, rightPoint.Value.X - point.X, belowPoint.Value.Y - point.Y);
+                        squares.Add(square);
+                    }
+                }
+            }
+
+            return squares;
+        }
+
 
 
         public State AnalyzeGame(Bitmap bitmap)
@@ -287,6 +340,9 @@ namespace VerSehen.Core
             Color deadBodyColor = Color.FromArgb(255, 62, 127, 62);
             int deadBodyRange = 0;
 
+            Color gridColor = Color.FromArgb(255, 79, 72, 103);
+            int gridRange = 0;  // Adjust this value as needed
+
             int totalAppleX = 0;
             int totalAppleY = 0;
             int applePixelCount = 0;
@@ -294,6 +350,9 @@ namespace VerSehen.Core
             int totalSnakeHeadX = 0;
             int totalSnakeHeadY = 0;
             int snakeHeadPixelCount = 0;
+
+            var GridPoints = GetGrid(bitmap);
+            var GridField = FindSquares(GridPoints);
 
             List<(Color target, int range)> headColorRanges = new List<(Color target, int range)>
                {
@@ -317,10 +376,14 @@ namespace VerSehen.Core
                         applePixelCount++;
                     }
 
-                    if (IsColorInRange(pixelColor, bodyColor, bodyRange))
+                    if (IsColorInRange(pixelColor, gridColor, gridRange))
                     {
-                        // Check if the surrounding pixels also have the body color
+                        // Check the color of the pixels inside the square
                         bool isSquare = true;
+                        int totalX = 0;
+                        int totalY = 0;
+                        int count = 0;
+
                         for (int dy = -1; dy <= 1; dy++)
                         {
                             for (int dx = -1; dx <= 1; dx++)
@@ -328,23 +391,30 @@ namespace VerSehen.Core
                                 if (x + dx >= 0 && x + dx < bitmap.Width && y + dy >= 0 && y + dy < bitmap.Height)
                                 {
                                     Color neighborColor = bitmap.GetPixel(x + dx, y + dy);
-                                    if (!IsColorInRange(neighborColor, bodyColor, bodyRange))
+                                    if (IsColorInRange(neighborColor, bodyColor, bodyRange))
+                                    {
+                                        totalX += x + dx;
+                                        totalY += y + dy;
+                                        count++;
+                                    }
+                                    else
                                     {
                                         isSquare = false;
                                         break;
                                     }
                                 }
                             }
+
                             if (!isSquare)
                             {
                                 break;
                             }
                         }
 
-                        // If all surrounding pixels have the body color, add the center of the square to the list
+                        // If all pixels inside the square have the body color, add the center of the square to the list
                         if (isSquare)
                         {
-                            state.SnakeBodyPoints.Add(new Point(x, y));
+                            state.SnakeBodyPoints.Add(new Point(totalX / count, totalY / count));
                         }
                     }
 

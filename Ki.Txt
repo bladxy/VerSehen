@@ -268,5 +268,115 @@
     "Actions": {
       "MoveLeft": -0.4633638078265198
     }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "442, 174",
+      "ApplePosition": "514, 175",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.4907871337225009
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "591, 513",
+      "ApplePosition": "463, 149",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4735860409682997
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "381, 149",
+      "ApplePosition": "233, 200",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.48280556872842373
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "233, 154",
+      "ApplePosition": "233, 200",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4649702652689943
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "458, 431",
+      "ApplePosition": "489, 303",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.4736964437245207
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "407, 123",
+      "ApplePosition": "361, 123",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -49.98168165547941
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "407, 200",
+      "ApplePosition": "412, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveUp": -0.4566781428668386
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "438, 205",
+      "ApplePosition": "412, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -0.4617178914904097
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "366, 533",
+      "ApplePosition": "412, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.4916831188134351
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "232, 359",
+      "ApplePosition": "412, 354",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveDown": -0.47133724886439377
+    }
+  },
+  {
+    "State": {
+      "SnakeHeadPosition": "304, 226",
+      "ApplePosition": "463, 72",
+      "IsGameOver": false
+    },
+    "Actions": {
+      "MoveRight": -0.490594230746885
+    }
   }
 ]
