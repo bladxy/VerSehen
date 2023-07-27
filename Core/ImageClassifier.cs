@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text.Json;
 using VerSehen.MVVM.Model;
+using Microsoft.ML.Vision;
 
 namespace VerSehen.Core
 {
@@ -18,9 +19,10 @@ namespace VerSehen.Core
             var context = new MLContext();
             var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-                .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek"))
-                .Append(context.MulticlassClassification.Trainers.ImageClassification())
-                .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+              .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek"))
+              .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
+              .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
             var model = pipeline.Fit(data);
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
