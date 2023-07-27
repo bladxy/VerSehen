@@ -46,7 +46,10 @@ namespace VerSehen.Core
                     if (Path.GetExtension(filename) == ".json")
                     {
                         var json = File.ReadAllText(filename);
-                        var state = JsonSerializer.Deserialize<State>(json);
+
+                        var options = new JsonSerializerOptions();
+                        options.Converters.Add(new PointConverter());
+                        var state = JsonSerializer.Deserialize<State>(json, options);
 
                         var imagePath = Path.ChangeExtension(filename, ".png");
                         var label = GetLabel(state, labelProperty);
