@@ -111,7 +111,7 @@ namespace VerSehen.Core
             double maxNewStateQValue = Q.ContainsKey(newState) ? Q[newState].Values.Max() : 0;
             double newQValue = (1 - alpha) * oldQValue + alpha * (reward + gamma * maxNewStateQValue);
             Q[oldState][action] = newQValue;
-            //Debug.WriteLine(($"Reward: {newQValue}"));
+            Debug.WriteLine(($"Reward: {reward}"));
         }
 
         public bool IsNear(Point p1, Point p2, int tolerance)
@@ -242,30 +242,26 @@ namespace VerSehen.Core
 
         public void AnalyzeGameAndSaveImage(State state, Bitmap bitmap)
         {
-
-            // Create a new image that includes the labels
             Bitmap labeledImage = new Bitmap(bitmap);
-
-            // Draw a circle around the apple
             using (Graphics g = Graphics.FromImage(labeledImage))
             {
                 g.DrawEllipse(Pens.Red, state.ApplePosition.X - 5, state.ApplePosition.Y - 5, 10, 10);
-
-                // Draw a circle around the snake's head
                 g.DrawEllipse(Pens.Green, state.SnakeHeadPosition.X - 5, state.SnakeHeadPosition.Y - 5, 10, 10);
-
                 foreach (Point bodyPoint in state.SnakeBodyPoints)
                 {
-                    // Draw a circle around the body point
                     g.DrawEllipse(Pens.Blue, bodyPoint.X - 5, bodyPoint.Y - 5, 10, 10);
                 }
             }
 
-            // Save the labeled image to a file
             string filepath = @"C:\Users\jaeger04\Desktop\SnakeKi\VerSehen\SnakeBibliotek";
             string filename = Path.Combine(filepath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
             labeledImage.Save(filename, ImageFormat.Png);
+
+            // Save the state of the game (i.e., the positions of the snake's head, body, and apple) to a JSON file
+            string json = JsonConvert.SerializeObject(state);
+            File.WriteAllText(Path.ChangeExtension(filename, ".json"), json);
         }
+
 
         public State AnalyzeGame(Bitmap bitmap)
         {
@@ -468,7 +464,7 @@ namespace VerSehen.Core
                 }
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
-                //AnalyzeGameAndSaveImage(currentState, bitmap);
+                AnalyzeGameAndSaveImage(currentState, bitmap);
                 if (currentState.IsGameOver)
                 {
 
@@ -478,13 +474,15 @@ namespace VerSehen.Core
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
+                    currentState.IsGameOver = false;
                     currentState = AnalyzeGame(bitmap);
-                    //AnalyzeGameAndSaveImage(currentState, bitmap);
+                    AnalyzeGameAndSaveImage(currentState, bitmap);
                 }
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
                 Bitmap newBitmap = CaptureWindow(formHandle);
                 State newState = AnalyzeGame(newBitmap);
+                AnalyzeGameAndSaveImage(newState, bitmap);
                 double reward = GetReward(currentState, newState, currentAction);
                 epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
                 UpdateQTable(currentState, currentAction, newState, reward);
@@ -495,6 +493,7 @@ namespace VerSehen.Core
                     SaveQTable(filepath);
                     counter = 0;
                 }
+                Debug.WriteLine($"Runde: {counter}");
             }
             SaveQTable(filepath);
             Stop();
