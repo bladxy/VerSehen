@@ -23,9 +23,10 @@ namespace VerSehen.Core
 
             // Definieren Sie die Pipeline
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-                .Append(context.Transforms.LoadRawImageBytes("Image", "ImagePath", colorsToExtract: ImagePixelExtractingEstimator.ColorBits.Red))
-                .Append(context.MulticlassClassification.Trainers.ImageClassification())
-                .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+               .Append(context.Transforms.LoadRawImageBytes("Image", "ImagePath"))
+               .Append(context.MulticlassClassification.Trainers.ImageClassification())
+               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
 
             // Trainieren Sie das Modell
             var model = pipeline.Fit(trainTestSplit.TrainSet);
