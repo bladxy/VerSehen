@@ -452,7 +452,7 @@ namespace VerSehen.Core
 
         public void Learn(IntPtr formHandle)
         {
-            LoadQTable(filepath);
+            //LoadQTable(filepath);
             int counter = 0;
             StartGame();
             Thread.Sleep(3000);
@@ -465,40 +465,40 @@ namespace VerSehen.Core
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
                 AnalyzeGameAndSaveImage(currentState, bitmap);
-                if (currentState.IsGameOver)
-                {
+                //if (currentState.IsGameOver)
+                //{
 
-                    Thread.Sleep(5000);
-                    //SaveQTable(filepath);
-                    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
-                    StartGame();
-                    Thread.Sleep(2000);
-                    bitmap = CaptureWindow(formHandle);
-                    currentState.IsGameOver = false;
-                    currentState = AnalyzeGame(bitmap);
-                    AnalyzeGameAndSaveImage(currentState, bitmap);
-                }
-                currentAction = ChooseAction(currentState);
-                PerformAction(currentAction);
-                Bitmap newBitmap = CaptureWindow(formHandle);
-                State newState = AnalyzeGame(newBitmap);
-                AnalyzeGameAndSaveImage(newState, bitmap);
-                double reward = GetReward(currentState, newState, currentAction);
-                epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
-                UpdateQTable(currentState, currentAction, newState, reward);
-                Thread.Sleep(100);
+                //    Thread.Sleep(5000);
+                //    //SaveQTable(filepath);
+                //    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
+                //    StartGame();
+                //    Thread.Sleep(2000);
+                //    bitmap = CaptureWindow(formHandle);
+                //    currentState.IsGameOver = false;
+                //    currentState = AnalyzeGame(bitmap);
+                //    AnalyzeGameAndSaveImage(currentState, bitmap);
+                //}
+                //currentAction = ChooseAction(currentState);
+                //PerformAction(currentAction);
+                //Bitmap newBitmap = CaptureWindow(formHandle);
+                //State newState = AnalyzeGame(newBitmap);
+                //AnalyzeGameAndSaveImage(newState, bitmap);
+                //double reward = GetReward(currentState, newState, currentAction);
+                //epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
+                //UpdateQTable(currentState, currentAction, newState, reward);
+                //Thread.Sleep(100);
                 counter++;
                 //var classifier = new ImageClassifier();
                 //classifier.TrainModel();
 
-                if (counter >= 100)
-                {
-                    SaveQTable(filepath);
-                    counter = 0;
-                }
+                //if (counter >= 100)
+                //{
+                //    SaveQTable(filepath);
+                //    counter = 0;
+                //}
                 Debug.WriteLine($"Runde: {counter}");
             }
-            SaveQTable(filepath);
+            //SaveQTable(filepath);
             Stop();
         }
 
