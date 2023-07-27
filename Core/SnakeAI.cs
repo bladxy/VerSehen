@@ -240,10 +240,8 @@ namespace VerSehen.Core
             return false;
         }
 
-        public void AnalyzeGameAndSaveImage(Bitmap bitmap)
+        public void AnalyzeGameAndSaveImage(State state, Bitmap bitmap)
         {
-            // Analyze the game as usual
-            State state = AnalyzeGame(bitmap);
 
             // Create a new image that includes the labels
             Bitmap labeledImage = new Bitmap(bitmap);
@@ -468,7 +466,7 @@ namespace VerSehen.Core
                 }
                 Bitmap bitmap = CaptureWindow(formHandle);
                 currentState = AnalyzeGame(bitmap);
-                AnalyzeGameAndSaveImage(bitmap);
+                //AnalyzeGameAndSaveImage(currentState, bitmap);
                 if (currentState.IsGameOver)
                 {
 
@@ -478,8 +476,8 @@ namespace VerSehen.Core
                     StartGame();
                     Thread.Sleep(2000);
                     bitmap = CaptureWindow(formHandle);
-                    AnalyzeGameAndSaveImage(bitmap);
                     currentState = AnalyzeGame(bitmap);
+                    //AnalyzeGameAndSaveImage(currentState, bitmap);
                 }
                 currentAction = ChooseAction(currentState);
                 PerformAction(currentAction);
