@@ -440,7 +440,8 @@ namespace VerSehen.Core
         {
             var actions = Enum.GetValues(typeof(Action)).Cast<Action>().ToList();
 
-            actions.RemoveAll(a => !CanMoveTo(state.SnakeHeadPosition.X + GetXOffset(a), state.SnakeHeadPosition.Y + GetYOffset(a)));
+            // Entfernen Sie Aktionen, die dazu führen würden, dass die Schlange in ihren eigenen Körper läuft
+            actions.RemoveAll(a => state.SnakeBodyPoints.Contains(new Point(state.SnakeHeadPosition.X + GetXOffset(a), state.SnakeHeadPosition.Y + GetYOffset(a))));
 
             if (random.NextDouble() < epsilon)
             {
@@ -451,6 +452,7 @@ namespace VerSehen.Core
                 return actions.OrderByDescending(a => Q.ContainsKey(state) && Q[state].ContainsKey(a) ? Q[state][a] : 0).First();
             }
         }
+
 
         public void Learn(IntPtr formHandle)
         {
@@ -471,7 +473,7 @@ namespace VerSehen.Core
                 {
 
                     Thread.Sleep(5000);
-                    SaveQTable(filepath);
+                    //SaveQTable(filepath);
                     Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
                     StartGame();
                     Thread.Sleep(2000);

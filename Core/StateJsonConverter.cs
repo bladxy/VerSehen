@@ -19,8 +19,6 @@ namespace VerSehen.Core
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var state = (State)value;
-            // Hier definieren Sie, wie das State-Objekt in einen JSON-String serialisiert wird.
-            // Zum Beispiel könnten Sie alle Eigenschaften des State-Objekts in einem JSON-Objekt speichern.
             writer.WriteStartObject();
             writer.WritePropertyName("SnakeHeadPosition");
             serializer.Serialize(writer, state.SnakeHeadPosition);
@@ -28,21 +26,22 @@ namespace VerSehen.Core
             serializer.Serialize(writer, state.ApplePosition);
             writer.WritePropertyName("IsGameOver");
             serializer.Serialize(writer, state.IsGameOver);
-            
+            writer.WritePropertyName("SnakeBodyPoints");  
+            serializer.Serialize(writer, state.SnakeBodyPoints);  
             writer.WriteEndObject();
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
-            // Hier definieren Sie, wie das State-Objekt aus dem JSON-String deserialisiert wird.
-            // Sie würden die Werte aus dem JSON-Objekt extrahieren und verwenden, um ein neues State-Objekt zu erstellen.
             var state = new State();
             state.SnakeHeadPosition = jsonObject["SnakeHeadPosition"].ToObject<System.Drawing.Point>(serializer);
             state.ApplePosition = jsonObject["ApplePosition"].ToObject<System.Drawing.Point>(serializer);
             state.IsGameOver = jsonObject["IsGameOver"].ToObject<bool>(serializer);
+            state.SnakeBodyPoints = jsonObject["SnakeBodyPoints"].ToObject<List<System.Drawing.Point>>(serializer);  
             return state;
         }
+
     }
 
 }
