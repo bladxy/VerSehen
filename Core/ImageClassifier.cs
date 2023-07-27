@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
+using VerSehen.MVVM.Model;
 
 namespace VerSehen.Core
 {
@@ -47,6 +50,28 @@ namespace VerSehen.Core
             var imageData = new ImageData { ImagePath = imagePath };
             var prediction = predictor.Predict(imageData);
             return prediction.Prediction;
+        }
+
+        public void CreateCsvFile(string folderPath)
+        {
+            using (var writer = new StreamWriter("images.csv"))
+            {
+                writer.WriteLine("ImagePath,Label");
+
+                foreach (var filename in Directory.EnumerateFiles(folderPath))
+                {
+                    if (Path.GetExtension(filename) == ".json")
+                    {
+                        var json = File.ReadAllText(filename);
+                        var state = JsonSerializer.Deserialize<State>(json);
+
+                        var imagePath = Path.ChangeExtension(filename, ".png");
+                        var label = state.ApplePosition; // Sie müssen dies an Ihre spezifischen Labels anpassen
+
+                        writer.WriteLine($"{imagePath},{label}");
+                    }
+                }
+            }
         }
 
     }

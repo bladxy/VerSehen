@@ -462,12 +462,14 @@ namespace VerSehen.Core
                 {
                     break;
                 }
-                Bitmap bitmap = CaptureWindow(formHandle);
-                currentState = AnalyzeGame(bitmap);
-                AnalyzeGameAndSaveImage(currentState, bitmap);
+                //Bitmap bitmap = CaptureWindow(formHandle);
+                //currentState = AnalyzeGame(bitmap);
+                //AnalyzeGameAndSaveImage(currentState, bitmap);
                 //if (currentState.IsGameOver)
                 //{
-
+                var classifier = new ImageClassifier();
+                classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek");
+                classifier.TrainModel();
                 //    Thread.Sleep(5000);
                 //    //SaveQTable(filepath);
                 //    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
