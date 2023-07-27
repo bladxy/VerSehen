@@ -456,40 +456,54 @@ namespace VerSehen.Core
             int counter = 0;
             StartGame();
             Thread.Sleep(3000);
-            while (true)
-            {
-                if (GetForegroundWindow() != formHandle)
-                {
-                    break;
-                }
-                //Bitmap bitmap = CaptureWindow(formHandle);
-                //currentState = AnalyzeGame(bitmap);
-                //AnalyzeGameAndSaveImage(currentState, bitmap);
-                //if (currentState.IsGameOver)
-                //{
-                var classifier = new ImageClassifier();
-                classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek");
-                classifier.TrainModel();
-                //    Thread.Sleep(5000);
-                //    //SaveQTable(filepath);
-                //    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
-                //    StartGame();
-                //    Thread.Sleep(2000);
-                //    bitmap = CaptureWindow(formHandle);
-                //    currentState.IsGameOver = false;
-                //    currentState = AnalyzeGame(bitmap);
-                //    AnalyzeGameAndSaveImage(currentState, bitmap);
-                //}
-                //currentAction = ChooseAction(currentState);
-                //PerformAction(currentAction);
-                //Bitmap newBitmap = CaptureWindow(formHandle);
-                //State newState = AnalyzeGame(newBitmap);
-                //AnalyzeGameAndSaveImage(newState, bitmap);
-                //double reward = GetReward(currentState, newState, currentAction);
-                //epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
-                //UpdateQTable(currentState, currentAction, newState, reward);
-                //Thread.Sleep(100);
-                counter++;
+            //while (true)
+            //{
+            //    if (GetForegroundWindow() != formHandle)
+            //    {
+            //        break;
+            //    }
+            //Bitmap bitmap = CaptureWindow(formHandle);
+            //currentState = AnalyzeGame(bitmap);
+            //AnalyzeGameAndSaveImage(currentState, bitmap);
+            //if (currentState.IsGameOver)
+            //{
+
+            //File.Delete("apple_position.csv");
+            //File.Delete("snake_head_position.csv");
+            //File.Delete("is_game_over.csv");
+            //File.Delete("snake_body_points.csv");
+
+            var classifier = new ImageClassifier();
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "ApplePosition", "apple_position.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "SnakeHeadPosition", "snake_head_position.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "IsGameOver", "is_game_over.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "SnakeBodyPoints", "snake_body_points.csv");
+
+            classifier.TrainModel("apple_position.csv");
+            classifier.TrainModel("snake_head_position.csv");
+            classifier.TrainModel("is_game_over.csv");
+            classifier.TrainModel("snake_body_points.csv");
+
+            //    Thread.Sleep(5000);
+            //    //SaveQTable(filepath);
+            //    Debug.WriteLine($"IsGameOver: {currentState.IsGameOver}");
+            //    StartGame();
+            //    Thread.Sleep(2000);
+            //    bitmap = CaptureWindow(formHandle);
+            //    currentState.IsGameOver = false;
+            //    currentState = AnalyzeGame(bitmap);
+            //    AnalyzeGameAndSaveImage(currentState, bitmap);
+            //}
+            //currentAction = ChooseAction(currentState);
+            //PerformAction(currentAction);
+            //Bitmap newBitmap = CaptureWindow(formHandle);
+            //State newState = AnalyzeGame(newBitmap);
+            //AnalyzeGameAndSaveImage(newState, bitmap);
+            //double reward = GetReward(currentState, newState, currentAction);
+            //epsilon = Math.Max(minEpsilon, epsilon * epsilonDecay);
+            //UpdateQTable(currentState, currentAction, newState, reward);
+            //Thread.Sleep(100);
+            counter++;
                 //var classifier = new ImageClassifier();
                 //classifier.TrainModel();
 
@@ -499,9 +513,9 @@ namespace VerSehen.Core
                 //    counter = 0;
                 //}
                 Debug.WriteLine($"Runde: {counter}");
-            }
+            //}
             //SaveQTable(filepath);
-            Stop();
+            //Stop();
         }
 
 

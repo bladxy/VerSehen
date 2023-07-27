@@ -13,33 +13,16 @@ namespace VerSehen.Core
 {
     public class ImageClassifier
     {
-        public void TrainModel()
+        public void TrainModel(string csvFileName)
         {
-            // Erstellen Sie einen neuen MLContext
             var context = new MLContext();
-
-            // Laden Sie die Daten
-            var data = context.Data.LoadFromTextFile<ImageData>("training_data.csv", separatorChar: ',');
-
-            // Teilen Sie die Daten in Trainings- und Testdaten auf
-            var trainTestSplit = context.Data.TrainTestSplit(data);
-
-            // Definieren Sie die Pipeline
+            var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-               .Append(context.Transforms.LoadRawImageBytes("Image", "ImagePath"))
-               .Append(context.MulticlassClassification.Trainers.ImageClassification())
-               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
-
-
-            // Trainieren Sie das Modell
-            var model = pipeline.Fit(trainTestSplit.TrainSet);
-
-            // Evaluieren Sie das Modell
-            var predictions = model.Transform(trainTestSplit.TestSet);
-            var metrics = context.MulticlassClassification.Evaluate(predictions);
-
-            // Speichern Sie das Modell
-            context.Model.Save(model, trainTestSplit.TrainSet.Schema, "model.zip");
+                .Append(context.Transforms.LoadRawImageBytes("Image", "ImagePath"))
+                .Append(context.MulticlassClassification.Trainers.ImageClassification())
+                .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+            var model = pipeline.Fit(data);
+            context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
 
         public string Predict(string imagePath)
@@ -52,9 +35,9 @@ namespace VerSehen.Core
             return prediction.Prediction;
         }
 
-        public void CreateCsvFile(string folderPath)
+        public void CreateCsvFile(string folderPath, string labelProperty, string csvFileName)
         {
-            using (var writer = new StreamWriter("images.csv"))
+            using (var writer = new StreamWriter(csvFileName))
             {
                 writer.WriteLine("ImagePath,Label");
 
@@ -66,7 +49,7 @@ namespace VerSehen.Core
                         var state = JsonSerializer.Deserialize<State>(json);
 
                         var imagePath = Path.ChangeExtension(filename, ".png");
-                        var label = state.ApplePosition; // Sie müssen dies an Ihre spezifischen Labels anpassen
+                        var label = GetLabel(state, labelProperty);
 
                         writer.WriteLine($"{imagePath},{label}");
                     }
@@ -74,6 +57,22 @@ namespace VerSehen.Core
             }
         }
 
+        private string GetLabel(State state, string labelProperty)
+        {
+            switch (labelProperty)
+            {
+                case "ApplePosition":
+                    return state.ApplePosition.ToString();
+                case "SnakeHeadPosition":
+                    return state.SnakeHeadPosition.ToString();
+                case "IsGameOver":
+                    return state.IsGameOver ? "GameOver" : "NotGameOver";
+                case "SnakeBodyPoints":
+                    return string.Join(";", state.SnakeBodyPoints.Select(p => p.ToString()));
+                default:
+                    throw new ArgumentException($"Unknown label property: {labelProperty}");
+            }
+        }
     }
 }
 
