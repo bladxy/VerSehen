@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.ML.Data;
 
-namespace VerSehen.MVVM.Model
+public class ModelOutput
 {
-    internal class ModelOutput
-    {
-    }
+    [ColumnName("PredictedLabel")]
+    public string Prediction;
 }
+

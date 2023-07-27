@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.ML;
+using Microsoft.ML.Data;
+using Microsoft.ML.Transforms.Image;
+using Microsoft.ML.Vision;
 
-namespace VerSehen.MVVM.Model
+// Definieren Sie eine Klasse für Ihre Eingabedaten
+public class ImageData
 {
-    internal class ImageData
-    {
-    }
+    [LoadColumn(0)]
+    public string ImagePath;
+
+    [LoadColumn(1)]
+    public string Label;
 }
