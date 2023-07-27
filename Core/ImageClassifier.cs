@@ -38,6 +38,17 @@ namespace VerSehen.Core
             // Speichern Sie das Modell
             context.Model.Save(model, trainTestSplit.TrainSet.Schema, "model.zip");
         }
+
+        public string Predict(string imagePath)
+        {
+            var context = new MLContext();
+            var model = context.Model.Load("model.zip", out var modelSchema);
+            var predictor = context.Model.CreatePredictionEngine<ImageData, ModelOutput>(model);
+            var imageData = new ImageData { ImagePath = imagePath };
+            var prediction = predictor.Predict(imageData);
+            return prediction.Prediction;
+        }
+
     }
 }
 

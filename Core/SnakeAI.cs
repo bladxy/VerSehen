@@ -488,6 +488,9 @@ namespace VerSehen.Core
                 UpdateQTable(currentState, currentAction, newState, reward);
                 Thread.Sleep(100);
                 counter++;
+                //var classifier = new ImageClassifier();
+                //classifier.TrainModel();
+
                 if (counter >= 100)
                 {
                     SaveQTable(filepath);
