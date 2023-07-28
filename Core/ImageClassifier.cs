@@ -18,19 +18,15 @@ namespace VerSehen.Core
         public void TrainModel(string csvFileName)
         {
             var context = new MLContext();
-            var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
+            var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',', hasHeader: true);
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-                .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek"))
-                .Append(context.Transforms.Conversion.MapValueToKey("SnakePosition"))
-                .Append(context.Transforms.Conversion.MapValueToKey("BodyPosition"))
-                .Append(context.Transforms.Conversion.MapValueToKey("ApplePosition"))
-                .Append(context.Transforms.Conversion.MapValueToKey("IsGameOver"))
-                .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
-                .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+              .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
+              .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "ImageFeature" }))
+              .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+            Debug.WriteLine(System.IO.Directory.GetCurrentDirectory());
             var model = pipeline.Fit(data);
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
-
 
         public string Predict(string imagePath)
         {
