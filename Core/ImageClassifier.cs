@@ -18,7 +18,7 @@ namespace VerSehen.Core
         public void TrainModel(string csvFileName)
         {
             var context = new MLContext();
-            var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
+            var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',', hasHeader: true);
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
               .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
               .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "ImageFeature" }))
