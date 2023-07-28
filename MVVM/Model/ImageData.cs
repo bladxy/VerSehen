@@ -7,7 +7,7 @@ using Microsoft.ML.Vision;
 public class ImageData
 {
     [LoadColumn(0)]
-    public string ImagePath;
+    public string Image;
 
     [LoadColumn(1)]
     public string Label;

@@ -20,7 +20,7 @@ namespace VerSehen.Core
             var context = new MLContext();
             var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-              .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "ImagePath"))
+              .Append(context.Transforms.LoadRawImageBytes("ImageFeatures", "", "Image"))
               .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
             Debug.WriteLine(System.IO.Directory.GetCurrentDirectory());
@@ -33,7 +33,7 @@ namespace VerSehen.Core
             var context = new MLContext();
             var model = context.Model.Load("model.zip", out var modelSchema);
             var predictor = context.Model.CreatePredictionEngine<ImageData, ModelOutput>(model);
-            var imageData = new ImageData { ImagePath = imagePath };
+            var imageData = new ImageData { Image = imagePath };
             var prediction = predictor.Predict(imageData);
             return prediction.Prediction;
         }
