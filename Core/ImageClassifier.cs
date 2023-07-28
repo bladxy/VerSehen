@@ -9,6 +9,7 @@ using System.IO;
 using System.Text.Json;
 using VerSehen.MVVM.Model;
 using Microsoft.ML.Vision;
+using System.Diagnostics;
 
 namespace VerSehen.Core
 {
@@ -22,7 +23,7 @@ namespace VerSehen.Core
               .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek"))
               .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
-
+            Debug.WriteLine(System.IO.Directory.GetCurrentDirectory());
             var model = pipeline.Fit(data);
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
@@ -41,7 +42,7 @@ namespace VerSehen.Core
         {
             using (var writer = new StreamWriter(csvFileName))
             {
-                writer.WriteLine("Image,Label");
+                writer.WriteLine("Label,Image");
 
                 foreach (var filename in Directory.EnumerateFiles(folderPath))
                 {
@@ -53,10 +54,10 @@ namespace VerSehen.Core
                         options.Converters.Add(new PointConverter());
                         var state = JsonSerializer.Deserialize<State>(json, options);
 
-                        var image = Path.ChangeExtension(filename, ".png");
                         var label = GetLabel(state, labelProperty);
+                        var image = Path.ChangeExtension(filename, ".png");
 
-                        writer.WriteLine($"{image},{label}");
+                        writer.WriteLine($"{label},{image}");
                     }
                 }
             }
