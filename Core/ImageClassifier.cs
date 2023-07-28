@@ -20,8 +20,8 @@ namespace VerSehen.Core
             var context = new MLContext();
             var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-              .Append(context.Transforms.LoadRawImageBytes("ImageFeatures", "", "Image"))
-              .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
+              .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
+              .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "ImageFeature" }))
               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
             Debug.WriteLine(System.IO.Directory.GetCurrentDirectory());
             var model = pipeline.Fit(data);
@@ -54,7 +54,7 @@ namespace VerSehen.Core
                         options.Converters.Add(new PointConverter());
                         var state = JsonSerializer.Deserialize<State>(json, options);
 
-                        var image = Path.ChangeExtension(filename, ".png");
+                        var image = Path.GetFileName(Path.ChangeExtension(filename, ".png"));
                         var label = GetLabel(state, labelProperty);
 
                         writer.WriteLine($"{image},{label}");
