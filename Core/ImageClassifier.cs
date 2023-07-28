@@ -11,6 +11,8 @@ using VerSehen.MVVM.Model;
 using Microsoft.ML.Vision;
 using System.Diagnostics;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers;
+
 
 namespace VerSehen.Core
 {
@@ -32,15 +34,12 @@ namespace VerSehen.Core
         {
             var context = new MLContext();
             var data = context.Data.LoadFromTextFile<SnakeBodyPointsData>(csvFileName, separatorChar: ',', hasHeader: true);
-
-            var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-                .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
-                .Append(context.Transforms.Text.TokenizeIntoWords("SnakeBodyPoints", separators: new[] { ';' }))
-                .Append(context.Transforms.Conversion.ConvertType("SnakeBodyPoints", outputKind: DataKind.Single))
-                .Append(context.Transforms.Conversion.MapValueToKey("SnakeBodyPoints"))
+           
+            var pipeline = context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image")
+                .Append(context.Transforms.Text.FeaturizeText("SnakeBodyPoints", "Label"))
                 .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options
                 {
-                    LabelColumnName = "Label",
+                    LabelColumnName = "SnakeBodyPoints",
                     FeatureColumnName = "ImageFeature"
                 }))
                 .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
@@ -49,6 +48,7 @@ namespace VerSehen.Core
 
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
+
 
         public string Predict(string imagePath)
         {

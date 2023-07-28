@@ -10,7 +10,7 @@ namespace VerSehen.MVVM.Model
     public class SnakeBodyPointsData
     {
         [LoadColumn(0)]
-        public string Text;
+        public string Image;
 
         [LoadColumn(1)]
         public string Label;
