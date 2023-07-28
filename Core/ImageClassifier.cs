@@ -10,6 +10,7 @@ using System.Text.Json;
 using VerSehen.MVVM.Model;
 using Microsoft.ML.Vision;
 using System.Diagnostics;
+using Microsoft.ML.Data;
 
 namespace VerSehen.Core
 {
@@ -34,6 +35,8 @@ namespace VerSehen.Core
 
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
                 .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
+                .Append(context.Transforms.Text.TokenizeIntoWords("SnakeBodyPoints", separators: new[] { ';' }))
+                .Append(context.Transforms.Conversion.ConvertType("SnakeBodyPoints", outputKind: DataKind.Single))
                 .Append(context.Transforms.Conversion.MapValueToKey("SnakeBodyPoints"))
                 .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options
                 {
@@ -42,12 +45,10 @@ namespace VerSehen.Core
                 }))
                 .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
-
             var model = pipeline.Fit(data);
 
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
-
 
         public string Predict(string imagePath)
         {
@@ -63,34 +64,23 @@ namespace VerSehen.Core
         {
             using (var writer = new StreamWriter(csvFileName))
             {
-                // Find the maximum number of body points in any JSON file
-                int maxBodyPoints = Directory.EnumerateFiles(folderPath)
-                    .Where(filename => Path.GetExtension(filename) == ".json")
-                    .Select(filename => JsonSerializer.Deserialize<State>(File.ReadAllText(filename)).SnakeBodyPoints.Count)
-                    .Max();
-
-                // Write the header line to the CSV file
-                writer.WriteLine($"Image,{string.Join(",", Enumerable.Range(1, maxBodyPoints).Select(i => $"BodyPoint{i}"))}");
+                writer.WriteLine("Image,Label");
 
                 foreach (var filename in Directory.EnumerateFiles(folderPath))
                 {
                     if (Path.GetExtension(filename) == ".json")
                     {
                         var json = File.ReadAllText(filename);
-                        var options = new JsonSerializerOptions();
-                        options.Converters.Add(new PointConverter());
-                        var state = JsonSerializer.Deserialize<State>(json, options);
-                        var image = Path.ChangeExtension(filename, ".png");
+                        var document = JsonDocument.Parse(json);
+                        var root = document.RootElement;
 
-                        var bodyPoints = state.SnakeBodyPoints.Select(p => p.ToString()).ToList();
-
-                        // Add empty strings for missing body points
-                        while (bodyPoints.Count < maxBodyPoints)
+                        if (root.TryGetProperty("SnakeBodyPoints", out var labelData) && labelData.ValueKind == JsonValueKind.Array)
                         {
-                            bodyPoints.Add("");
-                        }
+                            var image = Path.ChangeExtension(filename, ".png");
+                            var points = string.Join(";", labelData.EnumerateArray().Select(p => p.GetString()));
 
-                        writer.WriteLine($"{image},{string.Join(",", bodyPoints)}");
+                            writer.WriteLine($"{image},{points}");
+                        }
                     }
                 }
             }
