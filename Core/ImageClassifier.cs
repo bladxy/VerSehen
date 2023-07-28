@@ -41,7 +41,7 @@ namespace VerSehen.Core
         {
             using (var writer = new StreamWriter(csvFileName))
             {
-                writer.WriteLine("ImagePath,Label");
+                writer.WriteLine("Image,Label");
 
                 foreach (var filename in Directory.EnumerateFiles(folderPath))
                 {
@@ -53,10 +53,10 @@ namespace VerSehen.Core
                         options.Converters.Add(new PointConverter());
                         var state = JsonSerializer.Deserialize<State>(json, options);
 
-                        var imagePath = Path.ChangeExtension(filename, ".png");
+                        var image = Path.ChangeExtension(filename, ".png");
                         var label = GetLabel(state, labelProperty);
 
-                        writer.WriteLine($"{imagePath},{label}");
+                        writer.WriteLine($"{image},{label}");
                     }
                 }
             }
