@@ -23,10 +23,31 @@ namespace VerSehen.Core
               .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
               .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "ImageFeature" }))
               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
-            Debug.WriteLine(System.IO.Directory.GetCurrentDirectory());
             var model = pipeline.Fit(data);
             context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
         }
+
+        public void TrainModelForSnakeBodyPoints(string csvFileName)
+        {
+            var context = new MLContext();
+            var data = context.Data.LoadFromTextFile<SnakeBodyPointsData>(csvFileName, separatorChar: ',', hasHeader: true);
+
+            var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
+                .Append(context.Transforms.LoadRawImageBytes("ImageFeature", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "Image"))
+                .Append(context.Transforms.Conversion.MapValueToKey("SnakeBodyPoints"))
+                .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options
+                {
+                    LabelColumnName = "Label",
+                    FeatureColumnName = "ImageFeature"
+                }))
+                .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
+
+
+            var model = pipeline.Fit(data);
+
+            context.Model.Save(model, data.Schema, $"{Path.GetFileNameWithoutExtension(csvFileName)}.zip");
+        }
+
 
         public string Predict(string imagePath)
         {
@@ -36,6 +57,43 @@ namespace VerSehen.Core
             var imageData = new ImageData { Image = imagePath };
             var prediction = predictor.Predict(imageData);
             return prediction.Prediction;
+        }
+
+        public void CreateCsvFileForBodyPoints(string folderPath, string csvFileName)
+        {
+            using (var writer = new StreamWriter(csvFileName))
+            {
+                // Find the maximum number of body points in any JSON file
+                int maxBodyPoints = Directory.EnumerateFiles(folderPath)
+                    .Where(filename => Path.GetExtension(filename) == ".json")
+                    .Select(filename => JsonSerializer.Deserialize<State>(File.ReadAllText(filename)).SnakeBodyPoints.Count)
+                    .Max();
+
+                // Write the header line to the CSV file
+                writer.WriteLine($"Image,{string.Join(",", Enumerable.Range(1, maxBodyPoints).Select(i => $"BodyPoint{i}"))}");
+
+                foreach (var filename in Directory.EnumerateFiles(folderPath))
+                {
+                    if (Path.GetExtension(filename) == ".json")
+                    {
+                        var json = File.ReadAllText(filename);
+                        var options = new JsonSerializerOptions();
+                        options.Converters.Add(new PointConverter());
+                        var state = JsonSerializer.Deserialize<State>(json, options);
+                        var image = Path.ChangeExtension(filename, ".png");
+
+                        var bodyPoints = state.SnakeBodyPoints.Select(p => p.ToString()).ToList();
+
+                        // Add empty strings for missing body points
+                        while (bodyPoints.Count < maxBodyPoints)
+                        {
+                            bodyPoints.Add("");
+                        }
+
+                        writer.WriteLine($"{image},{string.Join(",", bodyPoints)}");
+                    }
+                }
+            }
         }
 
         public void CreateCsvFile(string folderPath, string labelProperty, string csvFileName)

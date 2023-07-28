@@ -477,12 +477,12 @@ namespace VerSehen.Core
             classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "ApplePosition", "apple_position.csv");
             classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "SnakeHeadPosition", "snake_head_position.csv");
             classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "IsGameOver", "is_game_over.csv");
-            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "SnakeBodyPoints", "snake_body_points.csv");
+            classifier.CreateCsvFileForBodyPoints("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "snake_body_points.csv");
                                                
             classifier.TrainModel("apple_position.csv");
             classifier.TrainModel("snake_head_position.csv");
             classifier.TrainModel("is_game_over.csv");
-            classifier.TrainModel("snake_body_points.csv");
+            classifier.TrainModelForSnakeBodyPoints("snake_body_points.csv");
 
             //    Thread.Sleep(5000);
             //    //SaveQTable(filepath);
