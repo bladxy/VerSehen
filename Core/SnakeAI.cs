@@ -253,7 +253,7 @@ namespace VerSehen.Core
                 }
             }
 
-            string filepath = @"C:\Users\jaeger04\Desktop\SnakeKi\VerSehen\SnakeBibliotek";
+            string filepath = @"C:C:\Users\jaeger04\Desktop\Wallpapers\SnakeBibliotek";
             string filename = Path.Combine(filepath, DateTime.Now.ToString("yyyyMMddHHmmss") + ".png");
             labeledImage.Save(filename, ImageFormat.Png);
 
@@ -474,11 +474,11 @@ namespace VerSehen.Core
             //File.Delete("snake_body_points.csv");
 
             var classifier = new ImageClassifier();
-            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "ApplePosition", "apple_position.csv");
-            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "SnakeHeadPosition", "snake_head_position.csv");
-            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "IsGameOver", "is_game_over.csv");
-            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek", "SnakeBodyPoints", "snake_body_points.csv");
-
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "ApplePosition", "apple_position.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "SnakeHeadPosition", "snake_head_position.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "IsGameOver", "is_game_over.csv");
+            classifier.CreateCsvFile("C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek", "SnakeBodyPoints", "snake_body_points.csv");
+                                               
             classifier.TrainModel("apple_position.csv");
             classifier.TrainModel("snake_head_position.csv");
             classifier.TrainModel("is_game_over.csv");

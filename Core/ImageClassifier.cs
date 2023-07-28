@@ -19,7 +19,7 @@ namespace VerSehen.Core
             var context = new MLContext();
             var data = context.Data.LoadFromTextFile<ImageData>(csvFileName, separatorChar: ',');
             var pipeline = context.Transforms.Conversion.MapValueToKey("Label")
-              .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\SnakeKi\\VerSehen\\SnakeBibliotek"))
+              .Append(context.Transforms.LoadRawImageBytes("Image", "C:\\Users\\jaeger04\\Desktop\\Wallpapers\\SnakeBibliotek"))
               .Append(context.MulticlassClassification.Trainers.ImageClassification(new ImageClassificationTrainer.Options { LabelColumnName = "Label", FeatureColumnName = "Image" }))
               .Append(context.Transforms.Conversion.MapKeyToValue("PredictedLabel"));
 
