@@ -54,7 +54,7 @@ namespace VerSehen.Core
                         options.Converters.Add(new PointConverter());
                         var state = JsonSerializer.Deserialize<State>(json, options);
 
-                        var image = Path.GetFileName(Path.ChangeExtension(filename, ".png"));
+                        var image = Path.ChangeExtension(filename, ".png");
                         var label = GetLabel(state, labelProperty);
 
                         writer.WriteLine($"{image},{label}");
