@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using VerSehen.Core;
-using VerSehen.MVVM.View;
 using VerSehen.Services;
-using Emgu.CV;
-using Emgu.CV.CvEnum;
-using Emgu.CV.Structure;
-using System.Drawing.Imaging;
-using static System.Windows.Forms.RibbonHelpers.WinApi;
-using System.Drawing;
 using System.Windows.Input;
 
 namespace VerSehen.MVVM.ViewModel
 {
     class MainViewModel : Core.ViewModel
     {
-        private SnakeAI snakeAI = new SnakeAI();
         public ICommand StopKiCommand { get; }
         private INavigationService _navigation;
         public INavigationService Navigation
@@ -66,13 +57,8 @@ namespace VerSehen.MVVM.ViewModel
                 await Task.Delay(1000); // Wait for 1 second
                 var homeview = GetHomeViewHandle();
                 SetFocusToWinFormsApp(homeview);
-                snakeAI.Start(homeview.formHandle);
             }, o => true);
-            StopKiCommand = new RelayCommand(o =>
-            {
-                snakeAI.SaveQTable("C:\\Users\\jaeger04\\Desktop\\SnakeKi\\Ki.Txt");
-                snakeAI.Stop();
-            });
+           
         }
     }
 }
